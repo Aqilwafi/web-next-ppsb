@@ -18,7 +18,7 @@ export default function RegisterPage() {
     return (
         <main className="flex flex-col items-center justify-start min-h-screen gap-8 bg-gray-50">
             <header className="w-full bg-blue-600 text-white px-6 py-4 shadow flex justify-between items-center">
-                <h1 className="text-xl font-bold">Baitun Na’im</h1>
+                <h1 className="text-xl font-bold">Baitun Na&apos;im</h1>
                 <nav>
                     <Link
                         href="/"

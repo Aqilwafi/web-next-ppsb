@@ -19,7 +19,7 @@ export default function HomePage() {
                   />
                 <div className="flex flex-col gap-8 w-full max-w-xs">
                     <h1 className="text-2xl font-bold text-gray-900 text-center">
-                    BAITUN NA'IM
+                    BAITUN NA&apos;IM
                     </h1>
                 </div>
                 <div className="flex flex-col gap-4 w-full max-w-md">
