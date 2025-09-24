@@ -22,7 +22,7 @@ export async function POST(req: NextRequest) {
       success: true,
       user: { username: user.username, name: user.nama || user.name }, // fallback kolom
     });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Login error:", err);
     return NextResponse.json({ success: false, message: "Internal server error" }, { status: 500 });
   }
