@@ -7,16 +7,20 @@ import { useRouter } from "next/navigation";
 export default function RegisterPage() {
   const [selectedA, setSelectedA] = useState("");
   const [formData, setFormData] = useState({
+    lembaga: "",
+    tingkatan: "",
+    nama: "",
+    jenisKelamin: "",
     email: "",
-    password: "",
+    telepon: "",
     username: "",
+    password: "",
   });
   const router = useRouter();
 
-  // perbaikan TypeScript: tambahkan FormEvent<HTMLFormElement>
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault(); // mencegah reload
-    console.log(formData); // bisa kirim ke API/fetch
+    e.preventDefault();
+    console.log(formData); // nanti bisa kirim ke API
     router.push("/"); // redirect ke home
   };
 
@@ -45,8 +49,11 @@ export default function RegisterPage() {
             <div className="flex flex-col w-full md:w-1/2">
               <label className="mb-1 font-medium text-gray-700">Lembaga A</label>
               <select
-                value={selectedA}
-                onChange={(e) => setSelectedA(e.target.value)}
+                value={formData.lembaga}
+                onChange={(e) => {
+                  setSelectedA(e.target.value);
+                  setFormData({ ...formData, lembaga: e.target.value });
+                }}
                 className="border rounded-lg px-3 py-2 bg-white text-gray-500"
               >
                 <option value="">Pilih Lembaga</option>
@@ -60,7 +67,9 @@ export default function RegisterPage() {
             <div className="flex flex-col w-full md:w-1/2">
               <label className="mb-1 font-medium text-gray-700">Tingkatan</label>
               <select
+                value={formData.tingkatan}
                 disabled={selectedA !== "MI"}
+                onChange={(e) => setFormData({ ...formData, tingkatan: e.target.value })}
                 className={`border rounded-lg px-3 py-2 bg-white text-gray-500 ${
                   selectedA !== "MI" ? "bg-gray-100 cursor-not-allowed" : ""
                 }`}
@@ -88,16 +97,22 @@ export default function RegisterPage() {
               <label className="mb-1 font-medium text-gray-700">Nama Calon Siswa</label>
               <input
                 type="text"
+                value={formData.nama}
+                onChange={(e) => setFormData({ ...formData, nama: e.target.value })}
                 placeholder="Nama"
                 className="border rounded-lg px-3 py-2 text-gray-500"
               />
             </div>
             <div className="flex flex-col w-full md:w-1/4">
               <label className="mb-1 font-medium text-gray-700">Jenis Kelamin</label>
-              <select className="border rounded-lg px-3 py-2 bg-white text-gray-500">
+              <select
+                value={formData.jenisKelamin}
+                onChange={(e) => setFormData({ ...formData, jenisKelamin: e.target.value })}
+                className="border rounded-lg px-3 py-2 bg-white text-gray-500"
+              >
                 <option value="">Pilih</option>
-                <option value="MI">Laki-laki</option>
-                <option value="TK">Perempuan</option>
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
               </select>
             </div>
           </div>
@@ -109,9 +124,7 @@ export default function RegisterPage() {
               <input
                 type="email"
                 value={formData.email}
-                onChange={(e) =>
-                  setFormData({ ...formData, email: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 className="border rounded-lg px-3 py-2 text-gray-500"
               />
             </div>
@@ -123,6 +136,8 @@ export default function RegisterPage() {
               <label className="mb-1 font-medium text-gray-700">Nomor Telepon Aktif</label>
               <input
                 type="tel"
+                value={formData.telepon}
+                onChange={(e) => setFormData({ ...formData, telepon: e.target.value })}
                 className="border rounded-lg px-3 py-2 text-gray-500"
                 pattern="[0-9]{8,15}"
               />
@@ -139,9 +154,7 @@ export default function RegisterPage() {
               <input
                 type="text"
                 value={formData.username}
-                onChange={(e) =>
-                  setFormData({ ...formData, username: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, username: e.target.value })}
                 className="border rounded-lg px-3 py-2 text-gray-500"
               />
             </div>
@@ -154,9 +167,7 @@ export default function RegisterPage() {
               <input
                 type="password"
                 value={formData.password}
-                onChange={(e) =>
-                  setFormData({ ...formData, password: e.target.value })
-                }
+                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                 className="border rounded-lg px-3 py-2 text-gray-500"
               />
             </div>
