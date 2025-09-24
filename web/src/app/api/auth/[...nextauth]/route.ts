@@ -1,10 +1,9 @@
-
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { compare } from "bcrypt";
-import pool from "@/lib/db"; // koneksi db kamu
+import pool from "@/lib/db";
 
-const handler = NextAuth({
+const authOptions = {
   secret: process.env.NEXTAUTH_SECRET,
   providers: [
     CredentialsProvider({
@@ -15,26 +14,27 @@ const handler = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials) return null;
-
         const res = await pool.query(
           "SELECT * FROM users WHERE username = $1",
           [credentials.username]
         );
         const user = res.rows[0];
-
         if (!user) return null;
-
         const match = await compare(credentials.password, user.password);
         if (!match) return null;
-
         return { id: user.id, name: user.nama, username: user.username };
       },
     }),
   ],
   pages: {
-    signIn: "/login", // custom login page
+    signIn: "/login",
   },
-});
+};
 
-export { handler as GET, handler as POST };
-export default handler; 
+export async function GET(req: Request) {
+  return NextAuth(authOptions)(req);
+}
+
+export async function POST(req: Request) {
+  return NextAuth(authOptions)(req);
+}
