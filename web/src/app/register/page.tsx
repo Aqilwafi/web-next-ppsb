@@ -5,6 +5,7 @@ import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [selectedA, setSelectedA] = useState("");
   const [formData, setFormData] = useState({
     lembaga: "",
@@ -16,12 +17,41 @@ export default function RegisterPage() {
     username: "",
     password: "",
   });
-  const router = useRouter();
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log(formData); // nanti bisa kirim ke API
-    router.push("/"); // redirect ke home
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await fetch("/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formData),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        // jika API mengembalikan error
+        setError(data.message || "Terjadi kesalahan");
+        setLoading(false);
+        return;
+      }
+      
+
+      // jika sukses, redirect ke home atau login
+      router.push("/");
+    } catch (err) {
+      setError("Tidak bisa terhubung ke server");
+      console.error(err);
+      setLoading(false);
+    }
   };
 
   return (
@@ -173,12 +203,10 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700"
-          >
-            Submit
-          </button>
+           {error && <p className="text-red-500">{error}</p>}
+      <button type="submit" disabled={loading} className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700">
+        {loading ? "Mendaftarkan..." : "Daftar"}
+      </button>
         </form>
       </div>
     </main>
