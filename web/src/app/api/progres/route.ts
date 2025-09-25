@@ -3,6 +3,7 @@ import pool from "@/lib/db";
 
 export async function GET(req: Request) {
     const { searchParams } = new URL(req.url);
+    const name = searchParams.get("userId");
     const userId = searchParams.get("userId");
   
     if (!userId) {

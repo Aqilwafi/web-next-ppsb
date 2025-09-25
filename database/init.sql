@@ -52,21 +52,21 @@ CREATE TABLE user_step_status (
 );
 INSERT INTO user_step_status (user_id, step_id, status_step) VALUES
 (1, 1, 'completed'),
-(1, 2, 'pending'),
+(2, 1, 'completed'),
 (2, 2, 'completed'),
 (2, 3, 'completed'),
-(2, 4, 'pending'),
-(3, 2, 'pending'),
+(3, 1, 'completed'),
+(4, 1, 'completed'),
 (4, 2, 'completed'),
 (4, 3, 'completed'),
 (4, 4, 'completed'),
-(4, 5, 'pending'),
-(5, 2, 'completed'),
-(6, 2, 'pending'),
+(5, 1, 'completed'),
+(6, 1, 'completed'),
+(7, 1, 'completed'),
 (7, 2, 'completed'),
-(7, 3, 'completed'),
+(8, 1, 'completed'),
 (8, 2, 'completed'),
 (8, 3, 'completed'),
 (8, 4, 'completed'),
-(8, 5, 'completed'),
-(8, 6, 'pending');
+(8, 5, 'completed');
+
