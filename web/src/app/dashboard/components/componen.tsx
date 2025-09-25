@@ -1,27 +1,100 @@
-"use client";
-
 import React from "react";
 import InputBio from "./input";
+import ViewBio from "./biodata";
 
 export const StepContents = (userId: string | number | null) => {
   return {
-    1: <p>Form registrasi user telah diisi.</p>,
-    2: (
-      <>
-        <p>Terima kasih telah bergabung di Yayasan ABC. Proses registrasi Anda akan segera dilanjutkan setelah pembayaran formulir diterima.</p>
-        <p>Pembayaran dapat dilakukan melalui transfer bank ke rekening berikut:</p>
-        <ul>
-          <li>Bank ABC</li>
-          <li>Nomor Rekening: 123-456-789</li>
-          <li>Atas Nama: Yayasan ABC</li>
-        </ul>
-        <p>Setelah melakukan pembayaran, harap konfirmasi melalui email atau nomor telepon yang tertera di website kami.</p>
-      </>
-    ),
-    3: <InputBio userId={userId} />,
-    4: <p>Selamat! Anda telah menyelesaikan ujian masuk. Kami akan segera menginformasikan hasilnya.</p>,
-    5: <p>Terima kasih telah menyetujui syarat dan ketentuan yang berlaku...</p>,
-    6: <p>Data Anda telah berhasil divalidasi. Terima kasih atas kerjasama Anda...</p>,
-    7: <p>Selamat! Anda telah diterima di Yayasan ABC...</p>,
+    1: {
+      ongoing: (
+        <p>
+          Silakan lakukan registrasi akun dengan mengisi data dasar Anda untuk
+          memulai proses pendaftaran.
+        </p>
+      ),
+      complete: (
+        <p>
+          Registrasi akun berhasil dilakukan. Anda dapat melanjutkan ke tahap
+          berikutnya.
+        </p>
+      ),
+    },
+    2: {
+      ongoing: (
+        <p>
+          Silakan melakukan pembayaran biaya formulir pendaftaran melalui
+          transfer bank sesuai instruksi yang tertera. Setelah pembayaran,
+          jangan lupa lakukan konfirmasi agar proses registrasi dapat
+          dilanjutkan.
+        </p>
+      ),
+      complete: (
+        <p>
+          Pembayaran formulir berhasil dikonfirmasi. Terima kasih, proses
+          registrasi Anda akan dilanjutkan ke tahap berikutnya.
+        </p>
+      ),
+    },
+    3: {
+      complete: <ViewBio userId={userId} />, // 👈 kirim userId ke InputBio
+      ongoing: <InputBio userId={userId} />,
+    },
+    4: {
+      ongoing: (
+        <p>
+          Silakan mengikuti ujian masuk sesuai jadwal yang sudah ditentukan.
+          Informasi detail terkait jadwal dan lokasi ujian dapat dilihat pada
+          dashboard Anda.
+        </p>
+      ),
+      complete: (
+        <p>
+          Ujian masuk telah selesai dilaksanakan. Hasil ujian akan segera
+          diumumkan sesuai jadwal.
+        </p>
+      ),
+    },
+    5: {
+      ongoing: (
+        <p>
+          Anda diminta untuk menandatangani surat persetujuan. Silakan unduh,
+          baca, dan tanda tangani dokumen sesuai instruksi.
+        </p>
+      ),
+      complete: (
+        <p>
+          Surat persetujuan sudah diterima. Terima kasih atas kerjasamanya,
+          dokumen ini akan digunakan untuk tahap validasi berikutnya.
+        </p>
+      ),
+    },
+    6: {
+      ongoing: (
+        <p>
+          Data dan dokumen Anda sedang divalidasi oleh tim administrasi. Proses
+          ini mungkin memerlukan waktu beberapa hari.
+        </p>
+      ),
+      complete: (
+        <p>
+          Validasi berhasil dilakukan. Semua data dan dokumen Anda telah
+          dinyatakan lengkap dan sesuai.
+        </p>
+      ),
+    },
+    7: {
+      ongoing: (
+        <p>
+          Harap menunggu, pengumuman resmi akan segera dipublikasikan pada
+          tanggal yang ditentukan. Silakan pantau dashboard Anda secara
+          berkala.
+        </p>
+      ),
+      complete: (
+        <p>
+          Selamat! Pengumuman resmi sudah diterbitkan. Silakan cek hasil dan
+          informasi tindak lanjut pada dashboard Anda.
+        </p>
+      ),
+    },
   };
 };

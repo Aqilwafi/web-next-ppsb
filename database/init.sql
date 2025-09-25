@@ -3,15 +3,15 @@ CREATE TABLE users (
     username VARCHAR(50) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     email VARCHAR(100) UNIQUE NOT NULL,
-    lembaga VARCHAR(20),
+    lembaga VARCHAR(20) NOT NULL,
     tingkatan VARCHAR(10),
-    nama VARCHAR(100),
-    jenis_kelamin VARCHAR(10),
+    nama_lengkap VARCHAR(255) NOT NULL,
+    jenis_kelamin VARCHAR(10) NOT NULL,
     no_telp VARCHAR(15),
     created_at TIMESTAMP DEFAULT NOW()
 );
 
-INSERT INTO users (username, password, email, lembaga, tingkatan, nama, jenis_kelamin, no_telp)
+INSERT INTO users (username, password, email, lembaga, tingkatan, nama_lengkap, jenis_kelamin, no_telp)
 VALUES
 ('user1', '$2b$10$hNNFSQoJ.btOnhJI45K63O9WOpyKQsgSIw/AMFty9nYOmK88NBfP2', 'user1@mail.com', 'MI', '1', 'Ahmad', 'Laki-laki', '081234567890'),
 ('user2', '$2b$10$bbywNkPGJ5k4bVM3CAzGou5pkpztjZpdITFqqA4VYh9Bc2dedsura', 'user2@mail.com', 'TK', '', 'Siti', 'Perempuan', '081234567892'),
@@ -25,12 +25,11 @@ VALUES
 CREATE TABLE biodata_lengkap (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
-    nama_lengkap VARCHAR(255) NOT NULL,
-    tempat_lahir VARCHAR(100) NOT NULL,
-    tanggal_lahir DATE NOT NULL,
-    alamat TEXT NOT NULL,
-    agama VARCHAR(50) NOT NULL,
-    anak_ke INT,
+    tempat_lahir VARCHAR(100) ,
+    tanggal_lahir DATE,
+    alamat TEXT,
+    agama VARCHAR(50) DEFAULT 'Islam',
+    anak_ke INT DEFAULT 1,
     jumlah_saudara INT,
     golongan_darah VARCHAR(5),
     penyakit VARCHAR(255),
@@ -38,12 +37,30 @@ CREATE TABLE biodata_lengkap (
     nama_ibu VARCHAR(100),
     pekerjaan_ayah VARCHAR(100),
     pekerjaan_ibu VARCHAR(100),
-    no_telp_ortu VARCHAR(15),
+    no_telp_ayah VARCHAR(15),
+    no_telp_ibu VARCHAR(15),
     alamat_ortu TEXT,
     asal_sekolah VARCHAR(255),
     tahun_lulus INT,
     created_at TIMESTAMP DEFAULT NOW()
 );
+
+INSERT INTO biodata_lengkap 
+(
+    user_id, tempat_lahir, tanggal_lahir, alamat, agama, anak_ke, jumlah_saudara, 
+    golongan_darah, penyakit, nama_ayah, nama_ibu, pekerjaan_ayah, pekerjaan_ibu, 
+    no_telp_ayah, no_telp_ibu, alamat_ortu, asal_sekolah, tahun_lulus
+) 
+VALUES
+(1, 'Jakarta', '2005-01-10', 'Jl. Merdeka No.1, Jakarta', 'Islam', 1, 2, 'O', NULL, 'Budi Santoso', 'Ani Lestari', 'Pegawai Negeri', 'Ibu Rumah Tangga', '081234567890', '081234567899', 'Jl. Merdeka No.1, Jakarta', 'SMPN 1 Jakarta', 2020),
+(2, 'Bandung', '2004-05-12', 'Jl. Asia Afrika No.5, Bandung', 'Islam', 2, 3, 'A', 'Asma', 'Dedi Gunawan', 'Ratna Sari', 'Wiraswasta', 'Guru', '081234567891', '081234567900', 'Jl. Asia Afrika No.5, Bandung', 'SMPN 2 Bandung', 2019),
+(3, 'Surabaya', '2006-07-20', 'Jl. Pahlawan No.10, Surabaya', 'Islam', 1, 1, 'B', NULL, 'Andi Prasetyo', 'Maya Wulandari', 'Dokter', 'Perawat', '081234567892', '081234567901', 'Jl. Pahlawan No.10, Surabaya', 'SMPN 3 Surabaya', 2021),
+(4, 'Medan', '2005-02-18', 'Jl. Gatot Subroto No.22, Medan', 'Islam', 3, 4, 'AB', 'Alergi Debu', 'Syahrul Hidayat', 'Siti Aminah', 'Polisi', 'Pedagang', '081234567893', '081234567902', 'Jl. Gatot Subroto No.22, Medan', 'SMPN 4 Medan', 2020),
+(5, 'Yogyakarta', '2004-11-05', 'Jl. Malioboro No.45, Yogyakarta', 'Islam', 1, 2, 'O', NULL, 'Ignatius Wibowo', 'Maria Kusuma', 'Dosen', 'Dokter', '081234567894', '081234567903', 'Jl. Malioboro No.45, Yogyakarta', 'SMPN 5 Yogyakarta', 2019),
+(6, 'Semarang', '2005-08-25', 'Jl. Pandanaran No.7, Semarang', 'Islam', 2, 2, 'A', NULL, 'Slamet Riyadi', 'Nurhayati', 'Petani', 'Pedagang', '081234567895', '081234567904', 'Jl. Pandanaran No.7, Semarang', 'SMPN 6 Semarang', 2020),
+(7, 'Makassar', '2006-03-14', 'Jl. Pettarani No.9, Makassar', 'Islam', 1, 1, 'B', 'Gastritis', 'Rahmat Hidayat', 'Dewi Kartika', 'Nelayan', 'Guru', '081234567896', '081234567905', 'Jl. Pettarani No.9, Makassar', 'SMPN 7 Makassar', 2021),
+(8, 'Denpasar', '2005-09-30', 'Jl. Sudirman No.12, Denpasar', 'Islam', 2, 3, 'O', NULL, 'Made Sujana', 'Ni Luh Ayu', 'Seniman', 'Ibu Rumah Tangga', '081234567897', '081234567906', 'Jl. Sudirman No.12, Denpasar', 'SMPN 8 Denpasar', 2020);
+
 
 -- Tabel master step (isi sekali saja oleh admin/dev)
 CREATE TABLE registration_steps (
@@ -62,38 +79,6 @@ INSERT INTO registration_steps (step_number, label) VALUES
 (5, 'Surat Persetujuan'),
 (6, 'Validasi'),
 (7, 'Info Pengumuman');
-
-/*CREATE TABLE all_content (
-    id SERIAL PRIMARY KEY,
-    registration_steps_id INT REFERENCES registration_steps(id) ON DELETE CASCADE,
-    label VARCHAR(100) NOT NULL,
-    content TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW(),
-    UNIQUE(registration_steps_id, label)
-);
-
-INSERT INTO all_content (registration_steps_id, label, body) VALUES
-(1, 'fin', 'Form registrasi user telah diisi.'),
-(2, 'fin', 'Terima kasih telah bergabung di Yayasan ABC.'),
-(3, 'fin', 'Biodata lengkap siswa telah diisi.'),
-(4, 'fin', 'Selamat! Anda telah menyelesaikan ujian masuk. Kami akan segera menginformasikan hasilnya kepada Anda. Terima kasih atas partisipasi Anda dalam proses seleksi ini.'),
-(5, 'fin', 'Terima kasih telah menyetujui syarat dan ketentuan yang berlaku. Kami menghargai komitmen Anda untuk mengikuti aturan yang telah ditetapkan demi kelancaran proses administrasi. Jika ada pertanyaan lebih lanjut, jangan ragu untuk menghubungi tim kami.'),
-(6, 'fin', 'Data Anda telah berhasil divalidasi. Terima kasih atas kerjasama Anda dalam proses ini. Jika ada pertanyaan atau informasi lebih lanjut yang Anda butuhkan, jangan ragu untuk menghubungi tim kami.'),
-(7, 'fin', 'Selamat! Anda telah diterima di Yayasan ABC. Kami sangat senang menyambut Anda sebagai bagian dari komunitas kami. Informasi lebih lanjut mengenai langkah selanjutnya akan segera kami sampaikan. Terima kasih atas kepercayaan Anda kepada kami.');
-
-(2, 'con1', 'Terima kasih telah bergabung di Yayasan ABC. Proses registrasi Anda akan segera dilanjutkan setelah pembayaran formulir diterima. Pastikan semua data yang Anda masukkan sudah benar agar proses administrasi berjalan lancar. Jika ada pertanyaan, jangan ragu untuk menghubungi tim kami.'),
-(2, 'con2', 'Pembayran dapat dilakukan melalui transfer bank ke rekening berikut:')
-(2, 'bank', 'Bank ABC'),
-(2, 'va', 'Nomor Rekening: 123-456-789'),
-(2, 'an', 'Atas Nama: Yayasan ABC')
-(2, 'con3', 'Setelah melakukan pembayaran, harap konfirmasi melalui email atau nomor telepon yang tertera di website kami. Terima kasih atas kerjasama Anda.'),
-(2, '', 'Pembayaran formulir telah diterima. Terima kasih atas kerjasama Anda. Proses registrasi akan segera dilanjutkan ke tahap berikutnya. Jika ada pertanyaan lebih lanjut, jangan ragu untuk menghubungi tim kami.');
-
-(3, 'con1', 'Isi Biodata Lengkap Celon Siswa'),
-(4, 'Ujian Masuk', 'Ujian masuk telah diselesaikan.'),
-(5, 'Surat Persetujuan', 'Surat persetujuan telah ditandatangani.'),
-(6, 'Validasi', 'Data telah berhasil divalidasi.'),
-(7, 'Info Pengumuman', 'Informasi pengumuman telah diterima.');*/
 
 -- Tabel status step tiap user
 CREATE TABLE user_step_status (

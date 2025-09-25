@@ -136,6 +136,13 @@ export default function DashboardPage() {
         }),
       });
       if (!res.ok) throw new Error("Gagal update progress");
+      // ✅ update state lokal completedSteps
+      setCompletedSteps((prev) => {
+        if (!prev.includes(currentStep)) {
+          return [...prev, currentStep];
+        }
+        return prev;
+      });
       // setelah sukses, lanjut ke next step (jika ada)
       const nextIndex = steps.findIndex((s) => s.step_number === currentStep) + 1;
       const nextStepNumber = nextIndex < steps.length ? steps[nextIndex].step_number : currentStep + 1;
@@ -201,8 +208,8 @@ export default function DashboardPage() {
                     {/* tampilkan content atau finish tergantung sudah selesai atau belum */}
                     <div>
                       {completedSteps.includes(step.step_number)
-                        ? stepsContent[step.step_number] // versi 'fin' bisa ditambah nanti
-                        : stepsContent[step.step_number]}
+                        ? stepsContent[step.step_number].complete
+                        : stepsContent[step.step_number].ongoing}
                     </div>
 
 

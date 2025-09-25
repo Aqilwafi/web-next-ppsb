@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
       }
 
       const result = await pool.query(
-        `SELECT id, nama, username, email, telepon, jenis_kelamin, lembaga, tingkatan
+        `SELECT id, nama_lengkap, username, email, telepon, jenis_kelamin, lembaga, tingkatan
          FROM users
          WHERE id = $1`,
         [userId]
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
       user = result.rows[0];
     } else if (username) {
       const result = await pool.query(
-        `SELECT id, nama, username, email, no_telp, jenis_kelamin, lembaga, tingkatan
+        `SELECT id, nama_lengkap, username, email, no_telp, jenis_kelamin, lembaga, tingkatan
          FROM users
          WHERE username = $1`,
         [username]

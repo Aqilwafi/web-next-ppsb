@@ -27,8 +27,7 @@ type BiodataForm = {
   nama_ibu: string;
   pekerjaan_ayah: string;
   pekerjaan_ibu: string;
-  no_telp_ayah: string;
-  no_telp_ibu: string;
+  no_telp_ortu: string;
   alamat_ortu: string;
   asal_sekolah: string;
   tahun_lulus?: number;
@@ -52,8 +51,7 @@ export default function InputBio() {
     nama_ibu: "",
     pekerjaan_ayah: "",
     pekerjaan_ibu: "",
-    no_telp_ayah: "",
-    no_telp_ibu: "",
+    no_telp_ortu: "",
     alamat_ortu: "",
     asal_sekolah: "",
     tahun_lulus: undefined,
@@ -190,28 +188,31 @@ export default function InputBio() {
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-1/2">
           <label>Tempat Lahir</label>
-          <input type="text" value={formData.tempat_lahir} onChange={(e) => setFormData({ ...formData, tempat_lahir: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.tempat_lahir} onChange={(e) => setFormData({ ...formData, tempat_lahir: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Tanggal Lahir</label>
-          <input type="date" value={formData.tanggal_lahir} onChange={(e) => setFormData({ ...formData, tanggal_lahir: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="date" value={formData.tanggal_lahir} onChange={(e) => setFormData({ ...formData, tanggal_lahir: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
       {/* Alamat */}
       <div className="flex flex-col">
         <label>Alamat</label>
-        <textarea value={formData.alamat} onChange={(e) => setFormData({ ...formData, alamat: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />      </div>
+        <textarea readOnly value={formData.alamat} onChange={(e) => setFormData({ ...formData, alamat: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+      </div>
+
+      
 
       {/* Anak ke & Jumlah Saudara */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-1/2">
           <label>Anak ke</label>
-          <input type="number" value={formData.anak_ke ?? ""} onChange={(e) => handleNumberChange("anak_ke", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="number" value={formData.anak_ke ?? ""} onChange={(e) => handleNumberChange("anak_ke", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Jumlah Saudara</label>
-          <input type="number" value={formData.jumlah_saudara ?? ""} onChange={(e) => handleNumberChange("jumlah_saudara", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="number" value={formData.jumlah_saudara ?? ""} onChange={(e) => handleNumberChange("jumlah_saudara", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
@@ -219,52 +220,51 @@ export default function InputBio() {
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-1/2">
           <label>Golongan Darah</label>
-          <input type="text" value={formData.golongan_darah ?? ""} onChange={(e) => setFormData({ ...formData, golongan_darah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.golongan_darah ?? ""} onChange={(e) => setFormData({ ...formData, golongan_darah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Penyakit</label>
-          <input type="text" value={formData.penyakit ?? ""} onChange={(e) => setFormData({ ...formData, penyakit: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.penyakit ?? ""} onChange={(e) => setFormData({ ...formData, penyakit: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
-      {/* Nama Ayah */}
       <div className="flex flex-col">
           <label>Nama Ayah</label>
-          <input type="text" value={formData.nama_ayah} onChange={(e) => setFormData({ ...formData, nama_ayah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.nama_ayah} onChange={(e) => setFormData({ ...formData, nama_ayah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
 
       {/* Nama & Pekerjaan Ayah */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-1/2">
           <label>No. Telepon Ayah</label>
-          <input type="tel" value={formData.no_telp_ayah} onChange={(e) => setFormData({ ...formData, no_telp_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="tel" value={formData.no_telp_ortu} onChange={(e) => setFormData({ ...formData, no_telp_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Pekerjaan Ayah</label>
-          <input type="text" value={formData.pekerjaan_ayah} onChange={(e) => setFormData({ ...formData, pekerjaan_ayah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.pekerjaan_ayah} onChange={(e) => setFormData({ ...formData, pekerjaan_ayah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
       {/* Nama & Pekerjaan Ibu */}
       <div className="flex flex-col">
           <label>Nama Ibu</label>
-          <input type="text" value={formData.nama_ibu} onChange={(e) => setFormData({ ...formData, nama_ibu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.nama_ibu} onChange={(e) => setFormData({ ...formData, nama_ibu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       {/* Pekerjaan Ibu & No. Telp Ortu */}
       <div className="flex flex-col md:flex-row gap-4">
       <div className="flex flex-col w-full md:w-1/2">
           <label>No. Telepon Ibu</label>
-          <input type="tel" value={formData.no_telp_ibu} onChange={(e) => setFormData({ ...formData, no_telp_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="tel" value={formData.no_telp_ortu} onChange={(e) => setFormData({ ...formData, no_telp_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Pekerjaan Ibu</label>
-          <input type="text" value={formData.pekerjaan_ibu} onChange={(e) => setFormData({ ...formData, pekerjaan_ibu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.pekerjaan_ibu} onChange={(e) => setFormData({ ...formData, pekerjaan_ibu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
       
       <div className="flex flex-col">
         <label>Alamat Orang Tua</label>
-        <textarea value={formData.alamat_ortu} onChange={(e) => setFormData({ ...formData, alamat_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+        <textarea readOnly value={formData.alamat_ortu} onChange={(e) => setFormData({ ...formData, alamat_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
       </div>
       
       
@@ -273,23 +273,27 @@ export default function InputBio() {
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-2/3">
           <label>Asal Sekolah</label>
-          <input type="text" value={formData.asal_sekolah} onChange={(e) => setFormData({ ...formData, asal_sekolah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.asal_sekolah} onChange={(e) => setFormData({ ...formData, asal_sekolah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/3">
           <label>Tahun Lulus</label>
-          <input type="number" value={formData.tahun_lulus ?? ""} onChange={(e) => handleNumberChange("tahun_lulus", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="number" value={formData.tahun_lulus ?? ""} onChange={(e) => handleNumberChange("tahun_lulus", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
       {error && <p className="text-red-500">{error}</p>}
-
+      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col w-full md:w-1/4">
       <button
         type="submit"
         disabled={loading}
         className={`bg-blue-600 text-white py-1 px-4 rounded-lg hover:bg-blue-700 transition-all duration-150 ${loading ? "w-32" : "w-full"}`}
       >
-        {loading ? "Menyimpan..." : "Simpan Biodata"}
+        {loading ? "Menyimpan..." : "Edit"}
       </button>
+        </div>
+        </div>
+        
     </form>
   );
 }

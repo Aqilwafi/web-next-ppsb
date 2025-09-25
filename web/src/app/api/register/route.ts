@@ -65,7 +65,15 @@ export async function POST(req: Request) {
       'completed'
     ]
 
+    const queryzx = `
+      INSERT INTO biodata_lengkap (user_id)
+      VALUES ($1)
+    `;
+
+    const valueszx = [uID]
+
     const resultz = await pool.query(queryz, valuesz);
+    const resultzx = await pool.query(queryzx, valueszx);
 
     return NextResponse.json({
       message: "Registrasi berhasil",
