@@ -28,7 +28,7 @@ export default function LoginPage() {
       return;
     }
 
-    router.push(`/dashboard?name=${encodeURIComponent(formData.username)}`);
+    router.push(`/dashboard?user=${encodeURIComponent(formData.username)}`);
   };
 
   return (
