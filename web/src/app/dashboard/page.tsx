@@ -5,12 +5,19 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { useSession, signOut } from "next-auth/react";
+import { StepContents } from "./components/componen";
 
 type StepFromDB = {
   id: number; // db id
   step_number: number;
   label: string;
   content: string | null;
+};
+type ContentsFromDB = {
+  id: number; // db id
+  registration_steps_id: number;
+  label: string;
+  content: string;
 };
 
 export default function DashboardPage() {
@@ -28,9 +35,11 @@ export default function DashboardPage() {
   const [loadingLogout, setLoadingLogout] = useState(false);
   const [loadingSteps, setLoadingSteps] = useState(true);
   const [marking, setMarking] = useState(false);
-
+  const [completedSteps, setCompletedSteps] = useState<number[]>([]); // array step_number yang completed
+  
   // helper ambil userId dari session (sesuaikan jika session tidak menyertakan id)
   const userId = (session as unknown)?.user?.id ?? (session as unknown)?.user?.userId ?? null;
+  const stepsContent = StepContents(userId);
 
   useEffect(() => {
     if (status !== "authenticated") return;
@@ -64,6 +73,7 @@ export default function DashboardPage() {
         } else {
           setCurrentStep(found);
         }
+
       } catch (err) {
         console.error("Fetch steps/progress error:", err);
         setCurrentStep(2); // fallback
@@ -71,8 +81,6 @@ export default function DashboardPage() {
         setLoadingSteps(false);
       }
     };
-    
-
     fetchData();
   }, [status, userId]);
 
@@ -186,9 +194,17 @@ export default function DashboardPage() {
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.25 }}
-                    className="px-4 pb-4 text-gray-700"
+                    className="px-4 pb-4 text-gray-700" 
                   >
-                    <div>{step.content}</div>
+                    
+
+                    {/* tampilkan content atau finish tergantung sudah selesai atau belum */}
+                    <div>
+                      {completedSteps.includes(step.step_number)
+                        ? stepsContent[step.step_number] // versi 'fin' bisa ditambah nanti
+                        : stepsContent[step.step_number]}
+                    </div>
+
 
                     {step.step_number === currentStep && step.step_number !== 1 && (
                       <button
