@@ -1,19 +1,12 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { supabaseClient } from "@/lib/supabaseClient";
 import { StepContents } from "./components/componen";
 import { AnimatePresence, motion } from "framer-motion";
-import Image from "next/image";
-
-type StepFromDB = {
-  id: number;
-  step_number: number;
-  label: string;
-  content: string | null;
-  status_step?: string | null;
-};
+import { fetchSteps, StepFromDB, StepUser } from "../services/fetchSteps";
 
 export default function DashboardPage() {
   const router = useRouter();
@@ -21,7 +14,7 @@ export default function DashboardPage() {
 
   const [user, setUser] = useState<any>(null);
   const [steps, setSteps] = useState<StepFromDB[]>([]);
-  const [currentStep, setCurrentStep] = useState<number>(2);
+  const [currentStep, setCurrentStep] = useState<number>(1);
   const [openStep, setOpenStep] = useState<number | null>(null);
   const [loadingLogout, setLoadingLogout] = useState(false);
   const [loadingSteps, setLoadingSteps] = useState(true);
@@ -46,107 +39,69 @@ export default function DashboardPage() {
       }
     });
 
-    return () => {
-      authListener.subscription.unsubscribe();
-    };
+    return () => authListener.subscription.unsubscribe();
   }, [router, supabase]);
 
   // Ambil steps progres user
   useEffect(() => {
     if (!user?.id) return;
 
-    const fetchSteps = async () => {
+    const getSteps = async () => {
+      setLoadingSteps(true);
+
       try {
-        setLoadingSteps(true);
+        const { allSteps, userSteps } = await fetchSteps(user.id);
 
-        const { data, error } = await supabase
-          .from("user_step_status")
-          .select(`
-            step_id,
-            status_step,
-            updated_at,
-            registration_step (
-              step_number,
-              label,
-              content
-            )
-          `)
-          .eq("user_id", user.id)
-          .order("registration_step.step_number");
+        // Merge userSteps ke allSteps untuk menambahkan status_step
+        const stepsWithStatus: StepFromDB[] = allSteps.map(step => {
+          const userStep: StepUser | undefined = userSteps.find(s => s.step_id === step.step_id);
+          return {
+            ...step,
+            status_step: userStep?.status_step || "pending",
+          };
+        });
 
-        if (error) throw error;
+        setSteps(stepsWithStatus);
 
-        const sorted = (data || []).map((d: any) => ({
-          step_id: d.step_id,
-          step_number: d.registration_step.step_number,
-          step_label: d.registration_step.label,
-          status_step: d.status_step,
-          updated_at: d.updated_at,
-        })).sort((a, b) => a.step_number - b.step_number);
-
-        setSteps(sorted);
-
-        const firstIncomplete =
-          sorted.find((s) => s.status_step !== "completed")?.step_number ?? sorted.length + 1;
-
+        const firstIncomplete = stepsWithStatus.find(s => s.status_step !== "completed")?.step_number ?? stepsWithStatus.length + 1;
         setCurrentStep(firstIncomplete);
-        setOpenStep(firstIncomplete <= sorted.length ? firstIncomplete : null);
+        setOpenStep(firstIncomplete <= stepsWithStatus.length ? firstIncomplete : null);
+
       } catch (err) {
-        console.error("Fetch steps/progress error:", err);
-        setCurrentStep(2);
+        console.error("Fetch steps error:", err);
       } finally {
         setLoadingSteps(false);
       }
     };
 
-    fetchSteps();
+    getSteps();
   }, [user?.id]);
 
   const markCurrentStepCompleted = async (stepNumber: number) => {
     if (!user?.id) return;
 
-    const stepObj = steps.find((s) => s.step_number === stepNumber);
+    const stepObj = steps.find(s => s.step_number === stepNumber);
     if (!stepObj) return;
 
     setMarking(true);
     try {
-      const { data, error } = await supabase
-        .from("user_step_status")
-        .upsert({
-          user_id: user.id,
-          step_id: stepObj.id,
-          status_step: "completed",
-          updated_at: new Date().toISOString(),
-        })
-        .select(`
-          step_id,
-          status_step,
-          updated_at,
-          registration_step (
-            step_number,
-            label,
-            content
-          )
-        `);
+      await supabase.from("user_step_status").upsert({
+        user_id: user.id,
+        step_id: stepObj.step_id,
+        status_step: "completed",
+        updated_at: new Date().toISOString(),
+      });
 
-      if (error) throw error;
-
-      const updatedSteps = (data || []).map((d: any) => ({
-        step_id: d.step_id,
-        step_number: d.registration_step.step_number,
-        step_label: d.registration_step.label,
-        status_step: d.status_step,
-        updated_at: d.updated_at,
-      })).sort((a, b) => a.step_number - b.step_number);
-
+      // Update state lokal
+      const updatedSteps = steps.map(s => 
+        s.step_number === stepNumber ? { ...s, status_step: "completed" } : s
+      );
       setSteps(updatedSteps);
 
-      const nextIndex = updatedSteps.findIndex((s) => s.step_number === stepNumber) + 1;
-      const nextStepNumber =
-        nextIndex < updatedSteps.length ? updatedSteps[nextIndex].step_number : stepNumber + 1;
-
+      const nextStepNumber = updatedSteps.find(s => s.status_step !== "completed")?.step_number ?? stepNumber + 1;
       setCurrentStep(nextStepNumber);
       setOpenStep(nextStepNumber <= updatedSteps.length ? nextStepNumber : null);
+
     } catch (err) {
       console.error("Mark complete error:", err);
     } finally {
@@ -195,25 +150,21 @@ export default function DashboardPage() {
       </div>
 
       <section className="p-6 space-y-3 max-w-3xl mx-auto">
-        {steps.map((step) => {
+        {steps.map(step => {
           const isLocked = step.step_number > currentStep;
+          const contentForStep = stepsContent[step.step_number] || { complete: null, ongoing: null };
+
           return (
             <div
-              key={step.id}
-              className={`bg-white rounded-lg shadow-md overflow-hidden ${
-                isLocked ? "opacity-60" : ""
-              }`}
+              key={step.step_id}
+              className={`bg-white rounded-lg shadow-md overflow-hidden ${isLocked ? "opacity-60" : ""}`}
             >
               <button
                 onClick={() => toggleStep(step.step_number)}
                 disabled={isLocked}
-                className={`w-full flex justify-between items-center p-4 font-medium ${getStepColor(
-                  step.step_number
-                )} ${isLocked ? "cursor-not-allowed" : "cursor-pointer"}`}
+                className={`w-full flex justify-between items-center p-4 font-medium ${getStepColor(step.step_number)} ${isLocked ? "cursor-not-allowed" : "cursor-pointer"}`}
               >
-                <span>
-                  {step.step_number}. {step.step_label}
-                </span>
+                <span>{step.step_number}. {step.label}</span>
                 <span>{openStep === step.step_number ? "▲" : "▼"}</span>
               </button>
 
@@ -228,14 +179,22 @@ export default function DashboardPage() {
                   >
                     <div>
                       {completedSteps.includes(step.step_number)
-                        ? stepsContent[step.step_number].complete
-                        : stepsContent[step.step_number].ongoing}
+                        ? contentForStep.complete
+                        : contentForStep.ongoing}
                     </div>
 
+                    {currentStep === step.step_number && step.step_number !== 1 && (
+                      <button
+                        onClick={() => markCurrentStepCompleted(step.step_number)}
+                        className="mt-3 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-70"
+                        disabled={marking}
+                      >
+                        {marking ? "Menyimpan..." : "Tandai Selesai"}
+                      </button>
+                    )}
+
                     {currentStep > steps.length && (
-                      <p className="mt-3 text-green-600">
-                        Semua langkah telah diselesaikan 🎉
-                      </p>
+                      <p className="mt-3 text-green-600">Semua langkah telah diselesaikan 🎉</p>
                     )}
                   </motion.div>
                 )}
