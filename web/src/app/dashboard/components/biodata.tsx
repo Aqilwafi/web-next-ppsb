@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { supabaseClient } from "@/lib/supabaseClient";
 
 type UserFromDB = {
-  id: number;
+  id: string;
   nama_lengkap: string;
   username: string;
   email: string;
@@ -27,122 +27,73 @@ type BiodataForm = {
   nama_ibu: string;
   pekerjaan_ayah: string;
   pekerjaan_ibu: string;
-  no_telp_ortu: string;
+  no_telp_ayah: string;
+  no_telp_ibu: string;
   alamat_ortu: string;
   asal_sekolah: string;
   tahun_lulus?: number;
 };
 
-export default function InputBio() {
-  const searchParams = useSearchParams();
-  const username = searchParams.get("user");
-  const formatDate = (isoDate: string) => isoDate.split("T")[0];
+export default function ReadonlyBio({
+  userId,
+  onEdit,
+}: {
+  userId: string | number | null;
+  onEdit: () => void;
+}) {
   const [userData, setUserData] = useState<UserFromDB | null>(null);
-  const [formData, setFormData] = useState<BiodataForm>({
-    tempat_lahir: "",
-    tanggal_lahir: "",
-    alamat: "",
-    agama: "",
-    anak_ke: undefined,
-    jumlah_saudara: undefined,
-    golongan_darah: "",
-    penyakit: "",
-    nama_ayah: "",
-    nama_ibu: "",
-    pekerjaan_ayah: "",
-    pekerjaan_ibu: "",
-    no_telp_ortu: "",
-    alamat_ortu: "",
-    asal_sekolah: "",
-    tahun_lulus: undefined,
-  });
-  const [loading, setLoading] = useState(false);
+  const [biodata, setBiodata] = useState<BiodataForm | null>(null);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
-  // Ambil data user
+  const formatDate = (isoDate: string) => isoDate.split("T")[0];
+
   useEffect(() => {
-    if (!username) return;
-    const fetchUserData = async () => {
+    if (!userId) return;
+
+    const fetchData = async () => {
+      setLoading(true);
+      setError("");
+
       try {
-        const res = await fetch(`/api/user?username=${username}`);
-        if (!res.ok) throw new Error(`Gagal ambil data user (${res.status})`);
-        const data: UserFromDB = await res.json();
-        setUserData(data);
+        // Ambil data user dari table 'profiles'
+        const { data: user, error: userErr } = await supabaseClient
+          .from("profiles")
+          .select("id, nama_lengkap, username, email, no_telp, jenis_kelamin, lembaga, tingkatan")
+          .eq("id", userId)
+          .single();
+
+        if (userErr) throw userErr;
+        setUserData(user as UserFromDB);
+
+        // Ambil biodata dari table 'biodata'
+        const { data: bio, error: bioErr } = await supabaseClient
+          .from("biodata")
+          .select("*")
+          .eq("user_id", userId)
+          .single();
+
+        if (bioErr && bioErr.code !== "PGRST116") throw bioErr; // kode 116 = not found
+        if (bio) {
+          setBiodata({
+            ...bio,
+            tanggal_lahir: bio.tanggal_lahir ? formatDate(bio.tanggal_lahir) : "",
+          } as BiodataForm);
+        }
       } catch (err) {
-        console.error("Fetch user error:", err);
-        setError("Gagal ambil data user");
+        console.error("Fetch user/biodata error:", err);
+        setError("Gagal memuat data user");
+      } finally {
+        setLoading(false);
       }
     };
-    fetchUserData();
-  }, [username]);
 
-  // Auto-fill biodata jika ada
-  useEffect(() => {
-    if (!userData) return;
-    const fetchBiodata = async () => {
-      try {
-        const res = await fetch(`/api/biodata?userId=${userData.id}`);
-        if (!res.ok) return;
-        const data: Partial<BiodataForm> = await res.json();
-        setFormData((prev) => ({ ...prev, ...data, tanggal_lahir: data.tanggal_lahir ? formatDate(data.tanggal_lahir) : "" }));
-      } catch (err) {
-        console.error("Fetch biodata error:", err);
-      }
-    };
-    fetchBiodata();
-  }, [userData]);
+    fetchData();
+  }, [userId]);
 
-  const handleNumberChange = (field: keyof BiodataForm, value: string) => {
-    setFormData({
-      ...formData,
-      [field]: value ? parseInt(value) : undefined,
-    });
-  };
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setError("");
-
-    if (!userData) {
-      setError("User data belum tersedia");
-      setLoading(false);
-      return;
-    }
-
-    // Validasi client-side
-    if (!formData.tempat_lahir || !formData.tanggal_lahir || !formData.alamat) {
-      setError("Tempat lahir, tanggal lahir, dan alamat wajib diisi");
-      setLoading(false);
-      return;
-    }
-
-    try {
-      const res = await fetch("/api/biodata", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: userData.id,
-          ...formData,
-        }),
-      });
-
-      if (!res.ok) {
-        throw new Error(`Gagal simpan biodata (${res.status})`);
-      }
-
-      const data = await res.json();
-      console.log("Biodata berhasil disimpan:", data);
-      alert("Biodata berhasil disimpan!");
-    } catch (err) {
-      console.error("Submit biodata error:", err);
-      setError("Gagal simpan biodata");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  if (!userData) return <p>{error || "Loading data user..."}</p>;
+  if (loading) return <p>Loading data...</p>;
+  if (error) return <p className="text-red-500">{error}</p>;
+  if (!userData) return <p>User tidak ditemukan</p>;
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -188,31 +139,28 @@ export default function InputBio() {
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-1/2">
           <label>Tempat Lahir</label>
-          <input readOnly type="text" value={formData.tempat_lahir} onChange={(e) => setFormData({ ...formData, tempat_lahir: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="text" value={formData.tempat_lahir} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Tanggal Lahir</label>
-          <input readOnly type="date" value={formData.tanggal_lahir} onChange={(e) => setFormData({ ...formData, tanggal_lahir: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="date" value={formData.tanggal_lahir} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
       {/* Alamat */}
       <div className="flex flex-col">
         <label>Alamat</label>
-        <textarea readOnly value={formData.alamat} onChange={(e) => setFormData({ ...formData, alamat: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
-      </div>
-
-      
+        <textarea value={formData.alamat} className="border rounded-lg px-3 py-2 text-gray-500" />      </div>
 
       {/* Anak ke & Jumlah Saudara */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-1/2">
           <label>Anak ke</label>
-          <input readOnly type="number" value={formData.anak_ke ?? ""} onChange={(e) => handleNumberChange("anak_ke", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="number" value={formData.anak_ke ?? ""} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Jumlah Saudara</label>
-          <input readOnly type="number" value={formData.jumlah_saudara ?? ""} onChange={(e) => handleNumberChange("jumlah_saudara", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="number" value={formData.jumlah_saudara ?? ""} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
@@ -220,51 +168,52 @@ export default function InputBio() {
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-1/2">
           <label>Golongan Darah</label>
-          <input readOnly type="text" value={formData.golongan_darah ?? ""} onChange={(e) => setFormData({ ...formData, golongan_darah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="text" value={formData.golongan_darah ?? ""} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Penyakit</label>
-          <input readOnly type="text" value={formData.penyakit ?? ""} onChange={(e) => setFormData({ ...formData, penyakit: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="text" value={formData.penyakit ?? ""} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
+      {/* Nama Ayah */}
       <div className="flex flex-col">
           <label>Nama Ayah</label>
-          <input readOnly type="text" value={formData.nama_ayah} onChange={(e) => setFormData({ ...formData, nama_ayah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="text" value={formData.nama_ayah} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
 
       {/* Nama & Pekerjaan Ayah */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-1/2">
           <label>No. Telepon Ayah</label>
-          <input readOnly type="tel" value={formData.no_telp_ortu} onChange={(e) => setFormData({ ...formData, no_telp_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="tel" value={formData.no_telp_ayah} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Pekerjaan Ayah</label>
-          <input readOnly type="text" value={formData.pekerjaan_ayah} onChange={(e) => setFormData({ ...formData, pekerjaan_ayah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="text" value={formData.pekerjaan_ayah} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
       {/* Nama & Pekerjaan Ibu */}
       <div className="flex flex-col">
           <label>Nama Ibu</label>
-          <input readOnly type="text" value={formData.nama_ibu} onChange={(e) => setFormData({ ...formData, nama_ibu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="text" value={formData.nama_ibu} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       {/* Pekerjaan Ibu & No. Telp Ortu */}
       <div className="flex flex-col md:flex-row gap-4">
       <div className="flex flex-col w-full md:w-1/2">
           <label>No. Telepon Ibu</label>
-          <input readOnly type="tel" value={formData.no_telp_ortu} onChange={(e) => setFormData({ ...formData, no_telp_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="tel" value={formData.no_telp_ibu} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Pekerjaan Ibu</label>
-          <input readOnly type="text" value={formData.pekerjaan_ibu} onChange={(e) => setFormData({ ...formData, pekerjaan_ibu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="text" value={formData.pekerjaan_ibu} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
       
       <div className="flex flex-col">
         <label>Alamat Orang Tua</label>
-        <textarea readOnly value={formData.alamat_ortu} onChange={(e) => setFormData({ ...formData, alamat_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+        <textarea value={formData.alamat_ortu} className="border rounded-lg px-3 py-2 text-gray-500" />
       </div>
       
       
@@ -273,27 +222,23 @@ export default function InputBio() {
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-2/3">
           <label>Asal Sekolah</label>
-          <input readOnly type="text" value={formData.asal_sekolah} onChange={(e) => setFormData({ ...formData, asal_sekolah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="text" value={formData.asal_sekolah} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/3">
           <label>Tahun Lulus</label>
-          <input readOnly type="number" value={formData.tahun_lulus ?? ""} onChange={(e) => handleNumberChange("tahun_lulus", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input type="number" value={formData.tahun_lulus ?? ""} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
       {error && <p className="text-red-500">{error}</p>}
-      <div className="flex flex-col md:flex-row gap-4">
-      <div className="flex flex-col w-full md:w-1/4">
+
       <button
-        type="submit"
-        disabled={loading}
-        className={`bg-blue-600 text-white py-1 px-4 rounded-lg hover:bg-blue-700 transition-all duration-150 ${loading ? "w-32" : "w-full"}`}
+        type="button"
+        onClick={onEdit}
+        className="mt-4 bg-yellow-500 text-white py-1 px-3 rounded hover:bg-yellow-600"
       >
-        {loading ? "Menyimpan..." : "Edit"}
+        Edit Biodata
       </button>
-        </div>
-        </div>
-        
     </form>
   );
 }

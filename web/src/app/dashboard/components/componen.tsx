@@ -1,8 +1,12 @@
-import React from "react";
-import InputBio from "./input";
-import ViewBio from "./biodata";
+// /dashboard/components/componen.tsx
+import React, { useState } from "react";
+import InputBio from "./biodata";
+import ViewBio from "./input";
 
-export const StepContents = (userId: string | number | null) => {
+export const StepContents = (
+  userId: string | number | null,
+  onStepComplete: () => void
+) => { const [isEditing, setIsEditing] = useState(false);
   return {
     1: {
       ongoing: (
@@ -35,8 +39,26 @@ export const StepContents = (userId: string | number | null) => {
       ),
     },
     3: {
-      complete: <ViewBio userId={userId} />, // 👈 kirim userId ke InputBio
-      ongoing: <InputBio userId={userId} />,
+      ongoing: (
+        <InputBio
+          userId={userId}
+          onComplete={() => {
+            onStepComplete();   // ✅ tetap mark step complete di dashboard
+            setIsEditing(false); // ✅ kembali ke view setelah save
+          }}
+        />
+      ),
+      complete: isEditing ? (
+        <InputBio
+          userId={userId}
+          onComplete={() => {
+            onStepComplete();
+            setIsEditing(false);
+          }}
+        />
+      ) : (
+        <ViewBio userId={userId} onEdit={() => setIsEditing(true)} />
+      ),
     },
     4: {
       ongoing: (

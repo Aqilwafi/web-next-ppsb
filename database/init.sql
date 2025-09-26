@@ -1,17 +1,65 @@
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    username VARCHAR(50) UNIQUE NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    lembaga VARCHAR(20) NOT NULL,
-    tingkatan VARCHAR(10),
+CREATE TABLE csb_profile (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    lembaga VARCHAR(50) NOT NULL,
+    tingkatan VARCHAR(20),
     nama_lengkap VARCHAR(255) NOT NULL,
     jenis_kelamin VARCHAR(10) NOT NULL,
-    no_telp VARCHAR(15),
+    no_telp VARCHAR(20),
     created_at TIMESTAMP DEFAULT NOW()
 );
 
-INSERT INTO users (username, password, email, lembaga, tingkatan, nama_lengkap, jenis_kelamin, no_telp)
+CREATE TABLE biodata_siswa (
+    id SERIAL PRIMARY KEY,
+    profile_id UUID REFERENCES csb_profile(id) ON DELETE CASCADE,
+    tempat_lahir VARCHAR(100),
+    tanggal_lahir DATE,
+    alamat TEXT,
+    agama VARCHAR(50) DEFAULT 'Islam',
+    anak_ke INT DEFAULT 1,
+    jumlah_saudara INT,
+    golongan_darah VARCHAR(5),
+    penyakit VARCHAR(255),
+    nama_ayah VARCHAR(100),
+    nama_ibu VARCHAR(100),
+    pekerjaan_ayah VARCHAR(100),
+    pekerjaan_ibu VARCHAR(100),
+    no_telp_ayah VARCHAR(20),
+    no_telp_ibu VARCHAR(20),
+    alamat_ortu TEXT,
+    asal_sekolah VARCHAR(255),
+    tahun_lulus INT,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+
+-- Tabel master step (isi sekali saja oleh admin/dev)
+CREATE TABLE registration_steps (
+  id SERIAL PRIMARY KEY,
+  step_number INT UNIQUE NOT NULL,
+  label VARCHAR(100) NOT NULL,
+  content TEXT
+);
+
+-- Tabel status step tiap user
+CREATE TABLE user_step_status (
+  id SERIAL PRIMARY KEY,
+  user_id UUID REFERENCES csb_profile(id) ON DELETE CASCADE,
+  step_id INT REFERENCES registration_steps(id),
+  status_step VARCHAR(20) DEFAULT 'pending', -- pending / completed
+  updated_at TIMESTAMP DEFAULT NOW(),
+  UNIQUE(user_id, step_id)
+);
+
+-- Tabel dokumen (untuk data pendaftar)
+create table dokumen (
+  id bigint primary key generated always as identity,
+  biodata_id bigint not null references biodata_siswa(id),
+  nama_file text not null,
+  tipe_file text not null,
+  url text not null,
+  uploaded_at timestamp default now()
+);
+
+INSERT INTO csb_profile (username, password, email, lembaga, tingkatan, nama_lengkap, jenis_kelamin, no_telp)
 VALUES
 ('user1', '$2b$10$hNNFSQoJ.btOnhJI45K63O9WOpyKQsgSIw/AMFty9nYOmK88NBfP2', 'user1@mail.com', 'MI', '1', 'Ahmad', 'Laki-laki', '081234567890'),
 ('user2', '$2b$10$bbywNkPGJ5k4bVM3CAzGou5pkpztjZpdITFqqA4VYh9Bc2dedsura', 'user2@mail.com', 'TK', '', 'Siti', 'Perempuan', '081234567892'),
@@ -22,7 +70,7 @@ VALUES
 ('user7', '$2b$10$gvSYYqFKIfn0fKLUaDbDZezZoagolDch9W7sKXh3rVdQK.r9zLxGy', 'user7@mail.com', 'TK', '', 'Rina', 'Perempuan', '081234567902'),
 ('user8', '$2b$10$VV.MHOUPbvjCKEdFpDjd8.AXa.rFIGuuBfWtXUQr1R3kUVj7fhjK6', 'user8@mail.com', 'MI', '4', 'Hendra', 'Laki-laki', '081234567904');
 
-CREATE TABLE biodata_lengkap (
+CREATE TABLE biodata_siswa (
     id SERIAL PRIMARY KEY,
     user_id INT REFERENCES users(id) ON DELETE CASCADE,
     tempat_lahir VARCHAR(100) ,
@@ -45,7 +93,7 @@ CREATE TABLE biodata_lengkap (
     created_at TIMESTAMP DEFAULT NOW()
 );
 
-INSERT INTO biodata_lengkap 
+INSERT INTO biodata_siswa 
 (
     user_id, tempat_lahir, tanggal_lahir, alamat, agama, anak_ke, jumlah_saudara, 
     golongan_darah, penyakit, nama_ayah, nama_ibu, pekerjaan_ayah, pekerjaan_ibu, 
@@ -62,13 +110,7 @@ VALUES
 (8, 'Denpasar', '2005-09-30', 'Jl. Sudirman No.12, Denpasar', 'Islam', 2, 3, 'O', NULL, 'Made Sujana', 'Ni Luh Ayu', 'Seniman', 'Ibu Rumah Tangga', '081234567897', '081234567906', 'Jl. Sudirman No.12, Denpasar', 'SMPN 8 Denpasar', 2020);
 
 
--- Tabel master step (isi sekali saja oleh admin/dev)
-CREATE TABLE registration_steps (
-  id SERIAL PRIMARY KEY,
-  step_number INT NOT NULL,
-  label VARCHAR(100) NOT NULL,
-  content TEXT
-);
+
 
 -- Isi data step awal
 INSERT INTO registration_steps (step_number, label) VALUES
@@ -80,32 +122,21 @@ INSERT INTO registration_steps (step_number, label) VALUES
 (6, 'Validasi'),
 (7, 'Info Pengumuman');
 
--- Tabel status step tiap user
-CREATE TABLE user_step_status (
-  id SERIAL PRIMARY KEY,
-  user_id INT REFERENCES users(id) ON DELETE CASCADE,
-  step_id INT REFERENCES registration_steps(id),
-  status_step VARCHAR(20) DEFAULT 'pending', -- pending / completed
-  updated_at TIMESTAMP DEFAULT NOW(),
-  UNIQUE(user_id, step_id)
-);
+
 INSERT INTO user_step_status (user_id, step_id, status_step) VALUES
 (1, 1, 'completed'),
 (2, 1, 'completed'),
 (2, 2, 'completed'),
-(2, 3, 'completed'),
 (3, 1, 'completed'),
 (4, 1, 'completed'),
 (4, 2, 'completed'),
-(4, 3, 'completed'),
-(4, 4, 'completed'),
 (5, 1, 'completed'),
 (6, 1, 'completed'),
 (7, 1, 'completed'),
 (7, 2, 'completed'),
 (8, 1, 'completed'),
 (8, 2, 'completed'),
-(8, 3, 'completed'),
-(8, 4, 'completed'),
-(8, 5, 'completed');
+
+
+-- Tabel dokumen (untuk data pendaftar)
 

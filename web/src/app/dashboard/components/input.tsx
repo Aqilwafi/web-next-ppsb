@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
 
 type UserFromDB = {
-  id: number;
+  id: string;
   nama_lengkap: string;
   username: string;
   email: string;
@@ -27,17 +27,22 @@ type BiodataForm = {
   nama_ibu: string;
   pekerjaan_ayah: string;
   pekerjaan_ibu: string;
-  no_telp_ayah: string;
-  no_telp_ibu: string;
+  no_telp_ortu: string;
   alamat_ortu: string;
   asal_sekolah: string;
   tahun_lulus?: number;
 };
 
-export default function InputBio() {
-  const searchParams = useSearchParams();
-  const username = searchParams.get("user");
-  const formatDate = (isoDate: string) => isoDate.split("T")[0];
+// 🔑 Tambah props userId & onComplete
+export default function InputBio({
+  userId,
+  onComplete,
+}: {
+  userId?: string | number | null;
+  onComplete?: () => void;
+}) {
+  const supabase = createClientComponentClient();
+
   const [userData, setUserData] = useState<UserFromDB | null>(null);
   const [formData, setFormData] = useState<BiodataForm>({
     tempat_lahir: "",
@@ -52,8 +57,7 @@ export default function InputBio() {
     nama_ibu: "",
     pekerjaan_ayah: "",
     pekerjaan_ibu: "",
-    no_telp_ayah: "",
-    no_telp_ibu: "",
+    no_telp_ortu: "",
     alamat_ortu: "",
     asal_sekolah: "",
     tahun_lulus: undefined,
@@ -61,38 +65,72 @@ export default function InputBio() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  // Ambil data user
+  // Ambil data user aktif
   useEffect(() => {
-    if (!username) return;
-    const fetchUserData = async () => {
-      try {
-        const res = await fetch(`/api/user?username=${username}`);
-        if (!res.ok) throw new Error(`Gagal ambil data user (${res.status})`);
-        const data: UserFromDB = await res.json();
-        setUserData(data);
-      } catch (err) {
-        console.error("Fetch user error:", err);
-        setError("Gagal ambil data user");
-      }
-    };
-    fetchUserData();
-  }, [username]);
+    const fetchUser = async () => {
+      const {
+        data: { user },
+        error,
+      } = await supabase.auth.getUser();
 
-  // Auto-fill biodata jika ada
+      if (error || !user) {
+        setError("Gagal ambil session user");
+        return;
+      }
+
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      if (profileError || !profile) {
+        setError("Gagal ambil data profile");
+        return;
+      }
+
+      setUserData({
+        id: profile.id,
+        nama_lengkap: profile.nama_lengkap,
+        username: profile.username,
+        email: profile.email,
+        no_telp: profile.telepon,
+        jenis_kelamin: profile.jenis_kelamin,
+        lembaga: profile.lembaga,
+        tingkatan: profile.tingkatan,
+      });
+    };
+
+    fetchUser();
+  }, [supabase]);
+
+  // Ambil biodata
   useEffect(() => {
     if (!userData) return;
+
     const fetchBiodata = async () => {
-      try {
-        const res = await fetch(`/api/biodata?userId=${userData.id}`);
-        if (!res.ok) return;
-        const data: Partial<BiodataForm> = await res.json();
-        setFormData((prev) => ({ ...prev, ...data, tanggal_lahir: data.tanggal_lahir ? formatDate(data.tanggal_lahir) : "" }));
-      } catch (err) {
-        console.error("Fetch biodata error:", err);
+      const { data, error } = await supabase
+        .from("biodata")
+        .select("*")
+        .eq("user_id", userData.id)
+        .single();
+
+      if (error) {
+        console.warn("Belum ada biodata:", error.message);
+        return;
       }
+
+      setFormData((prev) => ({
+        ...prev,
+        ...data,
+        tanggal_lahir: data.tanggal_lahir
+          ? new Date(data.tanggal_lahir).toISOString().split("T")[0]
+          : "",
+      }));
     };
+
     fetchBiodata();
-  }, [userData]);
+  }, [userData, supabase]);
 
   const handleNumberChange = (field: keyof BiodataForm, value: string) => {
     setFormData({
@@ -112,31 +150,33 @@ export default function InputBio() {
       return;
     }
 
-    // Validasi client-side
-    if (!formData.tempat_lahir || !formData.tanggal_lahir || !formData.alamat) {
-      setError("Tempat lahir, tanggal lahir, dan alamat wajib diisi");
-      setLoading(false);
-      return;
-    }
-
     try {
-      const res = await fetch("/api/biodata", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: userData.id,
-          ...formData,
-        }),
-      });
+      const { data: existing } = await supabase
+        .from("biodata")
+        .select("user_id")
+        .eq("user_id", userData.id)
+        .single();
 
-      if (!res.ok) {
-        throw new Error(`Gagal simpan biodata (${res.status})`);
+      if (existing) {
+        const { error: updateError } = await supabase
+          .from("biodata")
+          .update(formData)
+          .eq("user_id", userData.id);
+
+        if (updateError) throw updateError;
+      } else {
+        const { error: insertError } = await supabase
+          .from("biodata")
+          .insert({ user_id: userData.id, ...formData });
+
+        if (insertError) throw insertError;
       }
 
-      const data = await res.json();
-      console.log("Biodata berhasil disimpan:", data);
       alert("Biodata berhasil disimpan!");
-    } catch (err) {
+
+      // 🔑 Panggil callback biar dashboard update ke completed
+      if (onComplete) onComplete();
+    } catch (err: any) {
       console.error("Submit biodata error:", err);
       setError("Gagal simpan biodata");
     } finally {
@@ -145,6 +185,7 @@ export default function InputBio() {
   };
 
   if (!userData) return <p>{error || "Loading data user..."}</p>;
+
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -190,28 +231,31 @@ export default function InputBio() {
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-1/2">
           <label>Tempat Lahir</label>
-          <input type="text" value={formData.tempat_lahir} onChange={(e) => setFormData({ ...formData, tempat_lahir: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.tempat_lahir} onChange={(e) => setFormData({ ...formData, tempat_lahir: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Tanggal Lahir</label>
-          <input type="date" value={formData.tanggal_lahir} onChange={(e) => setFormData({ ...formData, tanggal_lahir: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="date" value={formData.tanggal_lahir} onChange={(e) => setFormData({ ...formData, tanggal_lahir: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
       {/* Alamat */}
       <div className="flex flex-col">
         <label>Alamat</label>
-        <textarea value={formData.alamat} onChange={(e) => setFormData({ ...formData, alamat: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />      </div>
+        <textarea readOnly value={formData.alamat} onChange={(e) => setFormData({ ...formData, alamat: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+      </div>
+
+      
 
       {/* Anak ke & Jumlah Saudara */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-1/2">
           <label>Anak ke</label>
-          <input type="number" value={formData.anak_ke ?? ""} onChange={(e) => handleNumberChange("anak_ke", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="number" value={formData.anak_ke ?? ""} onChange={(e) => handleNumberChange("anak_ke", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Jumlah Saudara</label>
-          <input type="number" value={formData.jumlah_saudara ?? ""} onChange={(e) => handleNumberChange("jumlah_saudara", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="number" value={formData.jumlah_saudara ?? ""} onChange={(e) => handleNumberChange("jumlah_saudara", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
@@ -219,52 +263,51 @@ export default function InputBio() {
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-1/2">
           <label>Golongan Darah</label>
-          <input type="text" value={formData.golongan_darah ?? ""} onChange={(e) => setFormData({ ...formData, golongan_darah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.golongan_darah ?? ""} onChange={(e) => setFormData({ ...formData, golongan_darah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Penyakit</label>
-          <input type="text" value={formData.penyakit ?? ""} onChange={(e) => setFormData({ ...formData, penyakit: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.penyakit ?? ""} onChange={(e) => setFormData({ ...formData, penyakit: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
-      {/* Nama Ayah */}
       <div className="flex flex-col">
           <label>Nama Ayah</label>
-          <input type="text" value={formData.nama_ayah} onChange={(e) => setFormData({ ...formData, nama_ayah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.nama_ayah} onChange={(e) => setFormData({ ...formData, nama_ayah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
 
       {/* Nama & Pekerjaan Ayah */}
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-1/2">
           <label>No. Telepon Ayah</label>
-          <input type="tel" value={formData.no_telp_ayah} onChange={(e) => setFormData({ ...formData, no_telp_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="tel" value={formData.no_telp_ortu} onChange={(e) => setFormData({ ...formData, no_telp_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Pekerjaan Ayah</label>
-          <input type="text" value={formData.pekerjaan_ayah} onChange={(e) => setFormData({ ...formData, pekerjaan_ayah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.pekerjaan_ayah} onChange={(e) => setFormData({ ...formData, pekerjaan_ayah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
       {/* Nama & Pekerjaan Ibu */}
       <div className="flex flex-col">
           <label>Nama Ibu</label>
-          <input type="text" value={formData.nama_ibu} onChange={(e) => setFormData({ ...formData, nama_ibu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.nama_ibu} onChange={(e) => setFormData({ ...formData, nama_ibu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       {/* Pekerjaan Ibu & No. Telp Ortu */}
       <div className="flex flex-col md:flex-row gap-4">
       <div className="flex flex-col w-full md:w-1/2">
           <label>No. Telepon Ibu</label>
-          <input type="tel" value={formData.no_telp_ibu} onChange={(e) => setFormData({ ...formData, no_telp_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="tel" value={formData.no_telp_ortu} onChange={(e) => setFormData({ ...formData, no_telp_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/2">
           <label>Pekerjaan Ibu</label>
-          <input type="text" value={formData.pekerjaan_ibu} onChange={(e) => setFormData({ ...formData, pekerjaan_ibu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.pekerjaan_ibu} onChange={(e) => setFormData({ ...formData, pekerjaan_ibu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
       
       <div className="flex flex-col">
         <label>Alamat Orang Tua</label>
-        <textarea value={formData.alamat_ortu} onChange={(e) => setFormData({ ...formData, alamat_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+        <textarea readOnly value={formData.alamat_ortu} onChange={(e) => setFormData({ ...formData, alamat_ortu: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
       </div>
       
       
@@ -273,23 +316,27 @@ export default function InputBio() {
       <div className="flex flex-col md:flex-row gap-4">
         <div className="flex flex-col w-full md:w-2/3">
           <label>Asal Sekolah</label>
-          <input type="text" value={formData.asal_sekolah} onChange={(e) => setFormData({ ...formData, asal_sekolah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="text" value={formData.asal_sekolah} onChange={(e) => setFormData({ ...formData, asal_sekolah: e.target.value })} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
         <div className="flex flex-col w-full md:w-1/3">
           <label>Tahun Lulus</label>
-          <input type="number" value={formData.tahun_lulus ?? ""} onChange={(e) => handleNumberChange("tahun_lulus", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
+          <input readOnly type="number" value={formData.tahun_lulus ?? ""} onChange={(e) => handleNumberChange("tahun_lulus", e.target.value)} className="border rounded-lg px-3 py-2 text-gray-500" />
         </div>
       </div>
 
       {error && <p className="text-red-500">{error}</p>}
-
+      <div className="flex flex-col md:flex-row gap-4">
+      <div className="flex flex-col w-full md:w-1/4">
       <button
         type="submit"
         disabled={loading}
         className={`bg-blue-600 text-white py-1 px-4 rounded-lg hover:bg-blue-700 transition-all duration-150 ${loading ? "w-32" : "w-full"}`}
       >
-        {loading ? "Menyimpan..." : "Simpan Biodata"}
+        {loading ? "Menyimpan..." : "Submit Biodata"}
       </button>
+        </div>
+        </div>
+        
     </form>
   );
 }

@@ -3,9 +3,13 @@
 import Link from "next/link";
 import { useState, FormEvent } from "react";
 import { useRouter } from "next/navigation";
+import { supabaseClient } from "@/lib/supabaseClient";
+import { initUserStepStatus } from "../services/userStepService";
 
 export default function RegisterPage() {
   const router = useRouter();
+  const supabase = supabaseClient;
+
   const [selectedA, setSelectedA] = useState("");
   const [formData, setFormData] = useState({
     lembaga: "",
@@ -27,29 +31,53 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      const res = await fetch("/api/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
+      // 1. Buat akun user di Supabase Auth
+      const { data: signUpData, error: signUpError } =
+        await supabase.auth.signUp({
+          email: formData.email,
+          password: formData.password,
+        });
 
-      const data = await res.json();
-
-      if (!res.ok) {
-        // jika API mengembalikan error
-        setError(data.message || "Terjadi kesalahan");
+      if (signUpError) {
+        setError(signUpError.message);
         setLoading(false);
         return;
       }
-      
 
-      // jika sukses, redirect ke home atau login
-      router.push("/");
+      const userId = signUpData.user?.id;
+      if (!userId) {
+        setError("Pendaftaran gagal. Silakan coba lagi.");
+        setLoading(false);
+        return;
+      }
+
+      // 2. Simpan data ke tabel csb_profile
+      const { error: profileError } = await supabase
+        .from("csb_profile")
+        .insert({
+          id: userId, // UUID dari auth.users
+          nama_lengkap: formData.nama,
+          jenis_kelamin: formData.jenisKelamin,
+          no_telp: formData.telepon,
+          lembaga: formData.lembaga,
+          tingkatan: formData.tingkatan,
+        });
+
+      if (profileError) {
+        console.error("Error insert profile:", profileError);
+        setError("Pendaftaran berhasil, tapi gagal menyimpan profil.");
+        setLoading(false);
+        return;
+      }
+
+      await initUserStepStatus(userId);
+
+      // 3. Redirect ke login
+      router.push("/login");
     } catch (err) {
-      setError("Tidak bisa terhubung ke server");
       console.error(err);
+      setError("Terjadi kesalahan saat registrasi.");
+    } finally {
       setLoading(false);
     }
   };
@@ -77,7 +105,7 @@ export default function RegisterPage() {
           {/* Lembaga dan Tingkatan */}
           <div className="flex flex-col md:flex-row gap-4">
             <div className="flex flex-col w-full md:w-1/2">
-              <label className="mb-1 font-medium text-gray-700">Lembaga A</label>
+              <label className="mb-1 font-medium text-gray-700">Lembaga</label>
               <select
                 value={formData.lembaga}
                 onChange={(e) => {

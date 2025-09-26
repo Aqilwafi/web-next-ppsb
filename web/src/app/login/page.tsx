@@ -2,34 +2,50 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { useState, FormEvent } from "react";
-import { signIn } from "next-auth/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useState, FormEvent, useEffect } from "react";
+import { supabaseClient } from "@/lib/supabaseClient";
 
 export default function LoginPage() {
   const router = useRouter();
-  const [formData, setFormData] = useState({ username: "", password: "" });
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/dashboard";
+  const [showPassword, setSwhowPassword] = useState(false);
+  const supabase = supabaseClient;
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false); // toggle password
+  const [error, setError] = useState("");
 
   const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
+    setError("");
 
-    const res = await signIn("credentials", {
-      redirect: false,
-      username: formData.username,
+    const { data: { session }, error: loginError } = await supabase.auth.signInWithPassword({
+      email: formData.email,
       password: formData.password,
     });
 
-    if (res?.error) {
+    if (loginError || !session) {
+      setError("Email atau password salah");
       setLoading(false);
-      alert("Username atau password salah");
       return;
     }
 
-    router.push(`/dashboard?user=${encodeURIComponent(formData.username)}`);
+    // ❌ jangan push router di sini
+    setLoading(false);
   };
+
+  useEffect(() => {
+    const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "SIGNED_IN" && session?.user) {
+        router.push(redirectTo); // redirect otomatis setelah login
+      }
+    });
+
+    return () => authListener.subscription.unsubscribe();
+  }, [router, redirectTo]);
+
 
   return (
     <main className="flex flex-col items-center justify-center min-h-screen gap-8 bg-gray-50">
@@ -52,19 +68,17 @@ export default function LoginPage() {
           onSubmit={handleLogin}
           className="flex flex-col gap-4 w-full max-w-md mt-4"
         >
-          {/* Username */}
           <input
-            type="text"
-            placeholder="Username"
-            value={formData.username}
+            type="email"
+            placeholder="Email"
+            value={formData.email}
             onChange={(e) =>
-              setFormData({ ...formData, username: e.target.value })
+              setFormData({ ...formData, email: e.target.value })
             }
             className="border rounded-lg px-3 py-2 w-full text-gray-700"
             required
           />
 
-          {/* Password dengan toggle */}
           <div className="relative">
             <input
               type={showPassword ? "text" : "password"}
@@ -76,12 +90,10 @@ export default function LoginPage() {
               className="border rounded-lg px-3 py-2 w-full text-gray-700"
               required
               autoComplete="new-password"
-              spellCheck={false} 
+              spellCheck={false}
             />
-            
           </div>
 
-          {/* Tombol */}
           <div className="flex gap-4 mt-2">
             <Link href="/">
               <button
@@ -101,6 +113,7 @@ export default function LoginPage() {
             </button>
           </div>
         </form>
+        {error && <p className="text-red-600">{error}</p>}
       </div>
     </main>
   );
