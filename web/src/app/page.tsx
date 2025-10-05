@@ -4,6 +4,7 @@
 import Link from "next/link";
 import Image from "next/image";
 
+
 export default function HomePage() {
     return (
         <main className="flex flex-col items-center justify-center min-h-screen bg-gray-50 px-4">
@@ -33,6 +34,8 @@ export default function HomePage() {
                         LOGIN
                       </button>
                     </Link>
+                    
+
                 </div>
             </div>
       </main>

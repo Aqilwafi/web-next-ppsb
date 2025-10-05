@@ -1,4 +1,4 @@
-FROM node:22-alpine
+FROM node:22-slim
 
 WORKDIR /app
 # Copy dulu package.json
@@ -7,8 +7,6 @@ COPY web/package*.json ./
 # Install dependencies
 RUN npm install
 
-RUN npm install pg 
-#RUN npm install bcrypt
 # Copy semua source code
 COPY web/ ./
 
