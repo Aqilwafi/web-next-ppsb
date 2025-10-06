@@ -24,6 +24,10 @@ export default function BiodataStep({
 
   const handleClick = async () => {
     try {
+       if (!dataB || !dataC || !dataD || !dataF) {
+        console.error("Data belum lengkap!");
+        return;
+      }
       await inputData(dataB, dataC, dataD, dataE, dataF);
       //console.log(dataA, dataB, dataC, dataD, dataE, dataF);
       //await mutate();
