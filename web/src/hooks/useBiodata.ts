@@ -87,8 +87,8 @@ export function useBiodata(userId: string) {
 
       const { akun, csb, siswa, ortu, tempat, wali } = await fetchBioSiswa();
       console.log(wali);
-      
-      setDataA(normalizeAkun(akun));
+       
+      setDataA(normalizeAkun(akun ?? null));
       setDataB(normalizeCSB(csb ?? null));
       setDataC(normalizeSiswa(siswa ?? null));
       setDataD(normalizeOrtu(ortu ?? null));

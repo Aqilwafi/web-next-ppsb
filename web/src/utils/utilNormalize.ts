@@ -82,11 +82,17 @@ export function normalizeCSB(csb: CSBProfile | null): CSBProfile | null {
   };
 }
 
-export function normalizeAkun(akun: UsersAkun | null): UsersAkun | null {
-  if (!akun) return null;
+export function normalizeAkun(akun: UsersAkun | null): UsersAkun {
+  if (!akun) {
+    return {
+      email: "",
+      username: "",
+    };
+  }
   return {
     ...akun,
     email: akun.email ?? "",
     username: akun.username ?? "",
   };
 }
+
