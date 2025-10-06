@@ -5,6 +5,7 @@ import { normalizeSiswa, normalizeOrtu, normalizeWali, normalizeTempat, normaliz
 import { denormalizeCSB, denormalizeSiswa, denormalizeOrtu, denormalizeWali, denormalizeTempat } from "@/utils/utilDenormalize";
 
 export function useBiodata(userId: string) {
+  
   // ✅ Inisialisasi aman tanpa null dan tanpa error TS
       const [dataA, setDataA] = useState<UsersAkun>({
         email: "",
@@ -87,7 +88,7 @@ export function useBiodata(userId: string) {
       const { akun, csb, siswa, ortu, tempat, wali } = await fetchBioSiswa();
       console.log(wali);
       
-      setDataA(normalizeAkun(akun ?? null));
+      setDataA(normalizeAkun(akun));
       setDataB(normalizeCSB(csb ?? null));
       setDataC(normalizeSiswa(siswa ?? null));
       setDataD(normalizeOrtu(ortu ?? null));
