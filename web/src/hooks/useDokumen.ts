@@ -2,7 +2,7 @@ import { useState } from "react";
 import { uploadMultiDokumen } from "@/services/serviceDokumen";
 import { fetchBioProfile } from "@/services/serviceBiodata"; // fungsi fetch siswa_id
 
-export function useDokumen(user: any) {
+export function useDokumen(user: unknown) {
   const [rawKK, setRawKK] = useState<File | null>(null);
   const [rawKTP, setRawKTP] = useState<File | null>(null);
   const [rawFoto, setRawFoto] = useState<File | null>(null);
@@ -23,8 +23,8 @@ export function useDokumen(user: any) {
 
       const results = await uploadMultiDokumen(user, siswaID, rawKK, rawKTP, rawFoto);
       return results;
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err);
       throw err;
     } finally {
       setLoading(false);

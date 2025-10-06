@@ -32,8 +32,8 @@ export function useBiodata(userId: string) {
       console.log(dataF);
 
       setError(null);
-    } catch (err: any) {
-      setError(err.message || "Gagal mengambil biodata.");
+    } catch (err) {
+      setError(err || "Gagal mengambil biodata.");
     } finally {
       setLoading(false);
     }
@@ -54,8 +54,8 @@ export function useBiodata(userId: string) {
 
       //await fetchData(); // Refresh data setelah input
       setError(null);
-    } catch (err: any) {
-      setError(err.message || "Gagal mengirim biodata.");
+    } catch (err) {
+      setError(err || "Gagal mengirim biodata.");
     }
     finally {
       setLoading(false);

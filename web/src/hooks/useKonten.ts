@@ -30,9 +30,9 @@ export function useKonten(userId: string) {
         : 0;
       setCurrentStep(lastCompletedStep + 1);
 
-    } catch (err: any) {
+    } catch (err) {
       console.error("fetchData error:", err);
-      setError(err.message || "Gagal mengambil data dashboard.");
+      setError(err || "Gagal mengambil data dashboard.");
     } finally {
       setLoading(false);
     }
@@ -51,9 +51,9 @@ export function useKonten(userId: string) {
       try {
         // Biarkan user menandai ulang step yang sudah dilewati
         await insertUserStepStatus(userId, stepId);
-      } catch (err: any) {
-        console.error("Gagal menandai ulang step:", err.message);
-        setError(err.message || "Gagal menandai ulang step.");
+      } catch (err) {
+        console.error("Gagal menandai ulang step:", err);
+        setError(err || "Gagal menandai ulang step.");
       } 
     }
 
@@ -71,9 +71,9 @@ export function useKonten(userId: string) {
 
       // (opsional) sync ulang dari server biar lebih valid
       // await fetchData();
-    } catch (err: any) {
-      console.error("Gagal menandai step:", err.message);
-      setError(err.message || "Gagal menandai step.");
+    } catch (err) {
+      console.error("Gagal menandai step:", err);
+      setError(err || "Gagal menandai step.");
     }
   };
 

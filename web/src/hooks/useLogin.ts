@@ -23,8 +23,8 @@ export function useLogin() {
       // redirect ke dashboard
       console.log("Redirecting to dashboard...");
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err) {
+      setError(err);
     } finally {
       setLoading(false);
     }

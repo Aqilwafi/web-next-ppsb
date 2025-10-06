@@ -6,7 +6,7 @@ import { DashboardStepProps } from "@/types/propsType";
 
 export default function DokumenStep({ user, isComplete, onComplete }: DashboardStepProps) {
   const { rawKK, rawKTP, rawFoto, setRawKK, setRawKTP, setRawFoto, inputDokumen, loading, error } = useDokumen(user);
-  const [hasilUpload, setHasilUpload] = useState<any[]>([]);
+  const [hasilUpload, setHasilUpload] = useState<unknown[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -22,8 +22,8 @@ export default function DokumenStep({ user, isComplete, onComplete }: DashboardS
       const results = await inputDokumen();
       setHasilUpload(results);
       onComplete(); // step complete jika semua sukses
-    } catch (err: any) {
-      alert("Gagal upload: " + err.message);
+    } catch (err) {
+      alert("Gagal upload: ");
     }
   };
 

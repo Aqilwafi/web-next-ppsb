@@ -22,8 +22,8 @@ export async function uploadMultiDokumen(
     if (!res.ok || !data.success) throw new Error(data.message || "Upload gagal");
 
     return data.results; // array { jenis, url, path }
-  } catch (err: any) {
-    console.error("Service uploadMultiDokumen error:", err.message);
+  } catch (err) {
+    console.error("Service uploadMultiDokumen error:", err);
     throw err;
   }
 }

@@ -68,8 +68,8 @@ export async function GET(req: NextRequest) {
       data: { akun: akunData, csb: profileData, siswa: siswaData, ortu: ortuData, tempat: tempatData, wali: waliData },
     });
 
-  } catch (err: any) {
+  } catch (err) {
     console.error("fetchBioSiswa API error:", err);
-    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
+    return NextResponse.json({ success: false }, { status: 500 });
   }
 }

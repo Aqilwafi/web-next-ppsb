@@ -24,8 +24,8 @@ export async function GET(req: NextRequest) {
     if (error) throw error;
 
     return NextResponse.json({ success: true, data }, { status: 200 });
-  } catch (err: any) {
+  } catch (err) {
     console.error("fetchProfile API error:", err);
-    return NextResponse.json({ success: false, message: err.message }, { status: 500 });
+    return NextResponse.json({ success: false}, { status: 500 });
   }
 }

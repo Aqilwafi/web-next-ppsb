@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
         { file: formData.get("fileC") as File, jenis: "akte" },
         ].filter(f => f.file);
 
-        const results: any[] = [];
+        const results: unknown[] = [];
 
         // Atomic upload
         for (const { file, jenis } of filePairs) {
@@ -55,8 +55,8 @@ export async function POST(req: NextRequest) {
         }
 
         return NextResponse.json({ success: true, results });
-    } catch (err: any) {
-        console.error("Upload multi error:", err.message);
-        return NextResponse.json({ success: false, message: err.message }, { status: 500 });
+    } catch (err) {
+        console.error("Upload multi error:");
+        return NextResponse.json({ success: false}, { status: 500 });
     }
 }

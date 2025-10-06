@@ -14,10 +14,10 @@ export async function POST(req: NextRequest) {
     if (error) throw error;
 
     return NextResponse.json({ success: true, data }, { status: 200 });
-  } catch (err: any) {
+  } catch (err) {
     console.error("fetchUserSteps error:", err);
     return NextResponse.json(
-      { success: false, message: err.message },
+      { success: false},
       { status: 500 }
     );
   }

@@ -1,11 +1,11 @@
 import { BiodataSiswa, BiodataOrtu, BiodataWali, TempatTinggal, CSBProfile, UsersAkun } from "@/types/biodataType";
 
 function emptyToNull<T>(value: T): T | null {
-  if (typeof value === "string") return value.trim() === "" ? null : (value as any);
+  if (typeof value === "string") return value.trim() === "" ? null : (value as unknown);
   return value ?? null;
 }
 
-export function denormalizeSiswa(siswa: BiodataSiswa): any {
+export function denormalizeSiswa(siswa: BiodataSiswa): BiodataSiswa {
   return {
     ...siswa,
     nisn: emptyToNull(siswa.nisn),
@@ -22,7 +22,7 @@ export function denormalizeSiswa(siswa: BiodataSiswa): any {
   };
 }
 
-export function denormalizeOrtu(ortu: BiodataOrtu): any {
+export function denormalizeOrtu(ortu: BiodataOrtu): BiodataOrtu {
   return {
     ...ortu,
     nama_ayah: emptyToNull(ortu.nama_ayah),
@@ -47,7 +47,7 @@ export function denormalizeOrtu(ortu: BiodataOrtu): any {
   };
 }
 
-export function denormalizeWali(wali: BiodataWali): any {
+export function denormalizeWali(wali: BiodataWali): BiodataWali {
   return {
     ...wali,
     id: "",
@@ -62,7 +62,7 @@ export function denormalizeWali(wali: BiodataWali): any {
   };
 }
 
-export function denormalizeTempat(tempat: TempatTinggal): any {
+export function denormalizeTempat(tempat: TempatTinggal): TempatTinggal {
   return {
     ...tempat,
     status_rumah: emptyToNull(tempat.status_rumah),
@@ -71,7 +71,7 @@ export function denormalizeTempat(tempat: TempatTinggal): any {
   };
 }
 
-export function denormalizeCSB(csb: CSBProfile): any {
+export function denormalizeCSB(csb: CSBProfile): CSBProfile {
   return {
     ...csb,
     lembaga: emptyToNull(csb.lembaga),
@@ -83,7 +83,7 @@ export function denormalizeCSB(csb: CSBProfile): any {
   };
 }
 
-export function denormalizeAkun(akun: UsersAkun): any {
+export function denormalizeAkun(akun: UsersAkun): UsersAkun {
   return {
     ...akun,
     email: emptyToNull(akun.email),

@@ -4,7 +4,7 @@ import { loginUser, getCurrentUser} from "@/services/serviceAuth";
 
 export function useAuth() {
   const router = useRouter();
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<unknown>(null);
   const [loading, setLoading] = useState(true);
   const [loadingLogin, setLoadingLogin] = useState(false);
   const [loadingLogout, setLoadingLogout] = useState(false);
@@ -16,8 +16,8 @@ export function useAuth() {
       try {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
-      } catch (err: any) {
-        console.error(err.message);
+      } catch (err) {
+        console.error("error");
       } finally {
         setLoading(false);
       }
@@ -42,8 +42,8 @@ export function useAuth() {
       if (!loggedInUser) throw new Error("Email atau password salah");
       setUser(loggedInUser);
       router.push("/dashboard");
-    } catch (err: any) {
-      setError(err.message || "Login gagal");
+    } catch (err) {
+      setError("Login gagal");
     } finally {
       setLoadingLogin(false);
     }
@@ -55,8 +55,8 @@ export function useAuth() {
       //await logoutUser();
       setUser(null);
       router.push("/login");
-    } catch (err: any) {
-      console.error(err.message);
+    } catch (err) {
+      console.error(err);
     } finally {
       setLoadingLogout(false);
     }
