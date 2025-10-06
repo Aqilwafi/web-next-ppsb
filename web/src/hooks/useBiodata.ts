@@ -12,71 +12,16 @@ export function useBiodata(userId: string) {
         username: "",
       });
 
-      const [dataB, setDataB] = useState<CSBProfile>({
-        id: "",
-        lembaga: null,
-        tingkatan: null,
-        asal_sekolah: null,
-        tahun_lulus: null,
-        alamat_pendidikan_sebelumnya: null,
-        npsn: null,
-        created_at: "",
-      });
+      const [dataB, setDataB] = useState<CSBProfile | null>(null);
 
-      const [dataC, setDataC] = useState<BiodataSiswa>({
-        id: 0,
-        profile_id: "",
-        nama_lengkap: "",
-        nisn: "",
-        nik: "",
-        no_kk: "",
-        jenis_kelamin: "",
-        tempat_lahir: "",
-        tanggal_lahir: "",
-        agama: "",
-        hobi: "",
-        cita_cita: "",
-        jumlah_saudara: null,
-        anak_ke: null,
-        golongan_darah: "",
-        penyakit: "",
-      });
+      const [dataC, setDataC] = useState<BiodataSiswa | null>(null);
 
-      const [dataD, setDataD] = useState<BiodataOrtu>({
-        id: 0,
-        siswa_id: "",
-        nama_ayah: "",
-        nama_ibu: "",
-        pekerjaan_ayah: "",
-        pekerjaan_ibu: "",
-        status_ayah: "",
-        status_ibu: "",
-        no_telp_ayah: "",
-        no_telp_ibu: "",
-        nik_ayah: "",
-        nik_ibu: "",
-        tempat_lahir_ayah: "",
-        tempat_lahir_ibu: "",
-        tanggal_lahir_ayah: "",
-        tanggal_lahir_ibu: "",
-        penghasilan_ayah: "",
-        penghasilan_ibu: "",
-        pendidikan_ayah: "",
-        pendidikan_ibu: "",
-        alamat_ortu: "",
-        created_at: "",
-      });
+      const [dataD, setDataD] = useState<BiodataOrtu | null>(null);
 
-      // ✅ Boleh null karena memang tidak wajib
+      // ✅ dataE sudah boleh null
       const [dataE, setDataE] = useState<BiodataWali | null>(null);
 
-      const [dataF, setDataF] = useState<TempatTinggal>({
-        id: 0,
-        siswa_id: "",
-        status_rumah: "",
-        tinggal_bersama: "",
-        alamat: "",
-      });
+      const [dataF, setDataF] = useState<TempatTinggal | null>(null);
 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
