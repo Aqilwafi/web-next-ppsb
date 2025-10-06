@@ -50,6 +50,7 @@ export function denormalizeOrtu(ortu: BiodataOrtu): any {
 export function denormalizeWali(wali: BiodataWali): any {
   return {
     ...wali,
+    id: "",
     nama_wali: emptyToNull(wali.nama_wali),
     nik_wali: emptyToNull(wali.nik_wali),
     tempat_lahir_wali: emptyToNull(wali.tempat_lahir_wali),
@@ -58,7 +59,6 @@ export function denormalizeWali(wali: BiodataWali): any {
     pekerjaan_wali: emptyToNull(wali.pekerjaan_wali),
     penghasilan_wali: emptyToNull(wali.penghasilan_wali),
     no_telp_wali: emptyToNull(wali.no_telp_wali),
-    alamat_wali: emptyToNull(wali.alamat_wali),
   };
 }
 

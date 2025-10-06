@@ -18,6 +18,9 @@ export default function BiodataStep({
   const [isEditing, setIsEditing] = useState(true);
   const [statusRumah, setStatusRumah] = useState();
   const [tinggalBersama, setTinggalBersama] = useState();
+  console.log(dataE);
+  console.log(dataD);
+  console.log(dataB);
 
   const handleClick = async () => {
     try {
@@ -482,8 +485,8 @@ export default function BiodataStep({
                     <select
                       disabled={!isEditing}
                       required={isEditing}
-                      value={dataD?.penghasilan ?? ""}
-                      onChange={(e) => setDataD({ ...dataD, penghasilan: e.target.value })}
+                      value={dataD?.penghasilan_ayah ?? ""}
+                      onChange={(e) => setDataD({ ...dataD, penghasilan_ayah: e.target.value })}
                       className={`border rounded-lg px-3 py-2 ${
                         isEditing ? "bg-white text-gray-700" : "bg-gray-100 text-gray-500 cursor-not-allowed"
                         }`}
@@ -779,62 +782,86 @@ export default function BiodataStep({
                 </div>
               </div>
               
-              {/* Status Rumah Tinggal Sama */}  {/* Alamat */}
-              <div className="p-4 border rounded-lg bg-white">
-                <h2 className="bg-blue-900 text-white px-4 py-2 font-bold">
-                  STATUS TEMPAT TINGGAL DAN ALAMAT SISWA
-                </h2>
-                <div className="flex items-start gap-2 mt-4">
-                  <label className="w-32 font-semibold">Status Rumah :</label>
-                  <div className="flex flex-wrap gap-4">
-                    {["Nenek", "Ortu", "Saudara", "Dinas", "Sewa/Kontrak"].map((val) => (
-                      <label key={val} className="flex items-center gap-1">
-                        <input
-                          type="radio"
-                          name="statusRumah"
-                          readOnly={!isEditing}
-                          required={isEditing}
-                          value={val}
-                          checked={statusRumah === val}
-                          onChange={(e) => setStatusRumah(e.target.value)}
-                          className="w-4 h-4"
-                        />
-                        {val}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-start gap-2 mt-4">
-                  <label className="w-32 font-semibold">Tinggal Sama :</label>
-                  <div className="flex flex-wrap gap-4">
-                    {["Ortu", "Wali", "Saudara", "Panti", "Pesantren"].map((val) => (
-                      <label key={val} className="flex items-center gap-1">
-                        <input
-                          type="radio"
-                          name="tinggalBersama"
-                           readOnly={!isEditing}
-                          required={isEditing}
-                          value={val}
-                          checked={tinggalBersama === val}
-                          onChange={(e) => setTinggalBersama(e.target.value)}
-                          className="w-4 h-4"
-                        />
-                        {val}
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex items-start gap-2 mt-4">
-                  <label className="w-32 font-semibold">Alamat :</label>
-                  <textarea
-                    readOnly={!isEditing}
-                    required={isEditing}
-                    className="flex-1 border rounded-lg px-3 py-2"
-                    rows={3}
-                    placeholder="Tulis alamat lengkap..."
-                  />
+             {/* Status Rumah Tinggal Sama & Alamat */}
+            <div className="p-4 border rounded-lg bg-white">
+              <h2 className="bg-blue-900 text-white px-4 py-2 font-bold">
+                STATUS TEMPAT TINGGAL DAN ALAMAT SISWA
+              </h2>
+
+              {/* Status Rumah */}
+              <div className="flex items-start gap-2 mt-4">
+                <label className="w-32 font-semibold">Status Rumah :</label>
+                <div className="flex flex-wrap gap-4">
+                  {["Nenek", "Ortu", "Saudara", "Dinas", "Sewa/Kontrak"].map((val) => (
+                    <label key={val} className="flex items-center gap-1">
+                      <input
+                        type="radio"
+                        name="statusRumah"
+                        readOnly={!isEditing}
+                        required={isEditing}
+                        value={val}
+                        checked={dataF?.status_rumah === val}
+                        onChange={(e) =>
+                          setDataF((prev) => ({
+                            ...prev,
+                            status_rumah: e.target.value,
+                          }))
+                        }
+                        className="w-4 h-4"
+                      />
+                      {val}
+                    </label>
+                  ))}
                 </div>
               </div>
+
+              {/* Tinggal Sama */}
+              <div className="flex items-start gap-2 mt-4">
+                <label className="w-32 font-semibold">Tinggal Sama :</label>
+                <div className="flex flex-wrap gap-4">
+                  {["Ortu", "Wali", "Saudara", "Panti", "Pesantren"].map((val) => (
+                    <label key={val} className="flex items-center gap-1">
+                      <input
+                        type="radio"
+                        name="tinggalBersama"
+                        readOnly={!isEditing}
+                        required={isEditing}
+                        value={val}
+                        checked={dataF?.tinggal_bersama === val}
+                        onChange={(e) =>
+                          setDataF((prev) => ({
+                            ...prev,
+                            tinggal_bersama: e.target.value,
+                          }))
+                        }
+                        className="w-4 h-4"
+                      />
+                      {val}
+                    </label>
+                  ))}
+                </div>
+              </div>
+
+              {/* Alamat */}
+              <div className="flex items-start gap-2 mt-4">
+                <label className="w-32 font-semibold">Alamat :</label>
+                <textarea
+                  readOnly={!isEditing}
+                  required={isEditing}
+                  className="flex-1 border rounded-lg px-3 py-2"
+                  value={dataF?.alamat || ""}
+                  onChange={(e) =>
+                    setDataF((prev) => ({
+                      ...prev,
+                      alamat: e.target.value,
+                    }))
+                  }
+                  rows={3}
+                  placeholder="Tulis alamat lengkap..."
+                />
+              </div>
+            </div>
+
 
               {error && <p className="text-red-500">{error}</p>}
 

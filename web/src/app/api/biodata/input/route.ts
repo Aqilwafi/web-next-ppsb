@@ -32,7 +32,7 @@ export async function POST(req: NextRequest) {
       .select()
       .single();
     if (csbErr) throw csbErr;
-    console.log(csb);
+    //console.log(csb);
 
     // 🔹 Upsert biodata_siswa
     const { id, ...siswaData } = siswa; // hapus id
@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       .upsert([{ profile_id: userId, ...siswaData }], { onConflict: "profile_id" })
       .select()
       .single();
-    console.log(siswaData);
+    //console.log(siswaData);
     if (siswaErr) throw siswaErr;
     //console.log(siswaData);
 
@@ -51,27 +51,34 @@ export async function POST(req: NextRequest) {
     // 🔹 Upsert biodata_ortu
     const { data: ortuUpsert, error: ortuErr } = await supabase
       .from("biodata_ortu")
-      .upsert([{ siswa_id: siswaId, ...ortuData }])
+      .upsert([{ siswa_id: siswaId, ...ortuData }], { onConflict: "siswa_id" })
       .select()
       .single();
     if (ortuErr) throw ortuErr;
     console.log(ortuData);
+    
 
-    const { id: idw, ...waliData } = wali; // hapus id
-    // 🔹 Upsert biodata_wali
-    const { data: waliUpsert, error: waliErr } = await supabase
-      .from("biodata_wali")
-      .upsert([{ siswa_id: siswaId, ...waliData }])
-      .select()
-      .single();
-    if (waliErr) throw waliErr;
-    console.log(waliData);
+  
+
+    
+      const { id: idw, ...waliData } = wali;
+      const { data: waliUpsert, error: waliErr } = await supabase
+        .from("biodata_wali")
+        .upsert([{ siswa_id: siswaId, ...waliData }], { onConflict: "siswa_id" })
+        .select()
+        .single();
+
+      if (waliErr) throw waliErr;
+      
+      console.log("Upsert wali lengkap:", waliData);
+    
+    
 
     const { id: ids, ...tempatData } = tempat; // hapus id
     // 🔹 Upsert tempat_tinggal
     const { data: tempatUpsert, error: tempatErr } = await supabase
       .from("tempat_tinggal")
-      .upsert([{ siswa_id: siswaId, ...tempatData }])
+      .upsert([{ siswa_id: siswaId, ...tempatData }], { onConflict: "siswa_id" })
       .select()
       .single();
     if (tempatErr) throw tempatErr;

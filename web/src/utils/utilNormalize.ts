@@ -3,7 +3,6 @@ import { BiodataSiswa, BiodataOrtu, BiodataWali, TempatTinggal, CSBProfile, User
 // Normalisasi semua field nullable menjadi string kosong atau default value
 export function normalizeSiswa(siswa: BiodataSiswa | null): BiodataSiswa | null {
   if (!siswa) return null;
-  console.log(siswa);
   return {
     ...siswa,
     
@@ -46,6 +45,7 @@ export function normalizeOrtu(ortu: BiodataOrtu | null): BiodataOrtu | null {
 }
 
 export function normalizeWali(wali: BiodataWali | null): BiodataWali | null {
+  console.log(wali);
   if (!wali) return null;
   return {
     ...wali,

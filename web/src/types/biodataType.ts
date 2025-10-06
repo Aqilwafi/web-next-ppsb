@@ -34,7 +34,7 @@ export type BiodataSiswa = {
 };
 
 export type BiodataOrtu = {
-  //id: number;
+  id: number;
   siswa_id: string;
   nama_ayah?: string | null;
   nama_ibu?: string | null;
@@ -59,7 +59,7 @@ export type BiodataOrtu = {
 };
 
 export type BiodataWali = {
-  //id: number;
+  id: number;
   siswa_id: string;
   nama_wali?: string | null;
   nik_wali?: string | null;
@@ -69,12 +69,11 @@ export type BiodataWali = {
   pekerjaan_wali?: string | null;
   penghasilan_wali?: string | null;
   no_telp_wali?: string | null;
-  alamat_wali?: string | null;
   created_at?: string;
 };
 
 export type TempatTinggal = {
-  //id: number;
+  id: number;
   siswa_id: string;
   status_rumah?: string | null;
   tinggal_bersama?: string | null;

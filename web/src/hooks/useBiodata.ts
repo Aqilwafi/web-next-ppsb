@@ -19,6 +19,7 @@ export function useBiodata(userId: string) {
       setLoading(true);
 
       const { akun, csb, siswa, ortu, tempat, wali } = await fetchBioSiswa();
+      console.log(wali);
       
       setDataA(normalizeAkun(akun ?? null));
       setDataB(normalizeCSB(csb ?? null));
@@ -26,6 +27,9 @@ export function useBiodata(userId: string) {
       setDataD(normalizeOrtu(ortu ?? null));
       setDataE(normalizeWali(wali ?? null));
       setDataF(normalizeTempat(tempat ?? null));
+      console.log(dataE);
+      console.log(dataD);
+      console.log(dataF);
 
       setError(null);
     } catch (err: any) {
@@ -40,13 +44,13 @@ export function useBiodata(userId: string) {
       setLoading(true);
       /*const DnB = denormalizeCSB(formDataB);
       const DnC = denormalizeSiswa(formDataC);
-      const DnD = denormalizeOrtu(formDataD);
+      const DnD = denormalizeOrtu(formDataD);*/
       const DnE = denormalizeWali(formDataE);
-      const DnF = denormalizeTempat(formdataF);*/
+      //const DnF = denormalizeTempat(formdataF);
       
       //await inputBiodata(userId, DnB, DnC, DnD, DnE, DnF);
-      //console.log(userId, formDataB, formDataC, formDataD, formDataD, formdataF);
-      await inputBiodata(userId, formDataB, formDataC, formDataD, formDataD, formdataF);
+      console.log(formDataE);
+      await inputBiodata(userId, formDataB, formDataC, formDataD, DnE, formdataF);
 
       //await fetchData(); // Refresh data setelah input
       setError(null);
