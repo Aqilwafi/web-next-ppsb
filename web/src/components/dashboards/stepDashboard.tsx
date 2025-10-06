@@ -10,7 +10,7 @@ import PersetujuanStep from "@/components/steps/persetujuanStep";
 import LastStep from "@/components/steps/lastStep";
 import  {DashboardStepProps}  from "@/types/propsType";
 
-const stepComponents: Record<number, React.ComponentType<unknown>> = {
+const stepComponents: Record<number, React.ComponentType<DashboardStepProps>> = {
   1: RegistrasiStep,
   2: PembayaranStep,
   3: BiodataStep,
