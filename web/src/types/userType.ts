@@ -18,7 +18,7 @@ export type UserLoginResponse = {
   success: boolean;
   message?: string;
   user?: {
-    id: number;
+    id: string;
     email: string;
     username: string;
   };

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { loginUser } from "@/services/serviceAuth";
 import { initUserStepStatus } from "@/services/serviceStep";
-import type { UserLoginResponse } from "@/types/user"; // kalau punya type terpisah
+import type { UserLoginResponse } from "@/types/userType"; // kalau punya type terpisah
 
 export function useLogin() {
   const router = useRouter();
