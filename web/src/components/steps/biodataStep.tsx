@@ -147,7 +147,11 @@ export default function BiodataStep({
                           required={isEditing}
                           type="date"
                           value={dataC?.tanggal_lahir ?? ""}
-                          onChange={(e) => setDataC({ ...dataC, tanggal_lahir: e.target.value })}
+                          onChange={(e) =>
+                              setDataC((prev) =>
+                              prev ? { ...prev, tempat_lahir: e.target.value } : prev
+                            )
+                          }
                           className={`border rounded-lg px-3 py-2 ${
                               isEditing
                                 ? "bg-white text-gray-700"
