@@ -21,3 +21,8 @@ export type StorageDoks2 = {
   tipe_file: string;
   ext: string;
 };
+
+export type UploadResult = {
+  jenis: string;
+  url: string;
+};

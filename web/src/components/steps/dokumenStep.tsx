@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import { useDokumen } from "@/hooks/useDokumen";
 import { DashboardStepProps } from "@/types/propsType";
+import { UploadResult } from "@/types/dokumenType";
 
 export default function DokumenStep({ user, isComplete, onComplete }: DashboardStepProps) {
   const { rawKK, rawKTP, rawFoto, setRawKK, setRawKTP, setRawFoto, inputDokumen, loading, error } = useDokumen(user);
-  const [hasilUpload, setHasilUpload] = useState<unknown[]>([]);
+const [hasilUpload, setHasilUpload] = useState<UploadResult[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
