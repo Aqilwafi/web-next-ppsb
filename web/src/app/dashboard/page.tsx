@@ -10,7 +10,9 @@ import { useState } from "react";
 
 export default function DashboardPage() {
   const { user, loading, handleLogout } = useDashboard();
-  const nama = user?.un || "User";
+  if (loading || !user) return <div>Loading...</div>;
+
+  const nama = user.un || "User";
 
   const {
     stepList,
@@ -20,7 +22,7 @@ export default function DashboardPage() {
     getStepColor,
     toggleStep,
     handleMarkStep
-  } = useKonten(user?.id);
+  } = useKonten(user.id.toString());
 
   // Loading & error per step
   const [loadingStep, setLoadingStep] = useState<number | null>(null);
