@@ -106,7 +106,7 @@ export default function DashboardPage() {
                     <DashboardStep
                       stepNumber={step.step_number_id}
                       isComplete={isComplete}
-                      user={user.id}
+                      user={user.id.toString()} // 🔥 ubah ke string
                       onComplete={() => handleComplete(step.step_number_id)}
                       isLoading={isLoading}
                     />
