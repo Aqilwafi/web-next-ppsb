@@ -24,14 +24,6 @@ export function useAuth() {
     };
     fetchSession();
 
-    // listener logout Supabase
-    const unsubscribe = onAuthStateChange((event) => {
-      if (event === "SIGNED_OUT") {
-        setUser(null);
-        router.push("/login");
-      }
-    });
-    return () => unsubscribe();
   }, [router]);
 
   const login = async (email: string, password: string) => {
