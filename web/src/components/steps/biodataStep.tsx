@@ -433,7 +433,7 @@ export default function BiodataStep({
                   <div className="flex flex-col w-full md:w-2/7">
                     <label>Status</label>
                     <select
-                      readOnly={!isEditing}      
+                      disabled={!isEditing}      
                       required={isEditing}
                       value={dataD?.status_ayah ?? ""}    
                       onChange={(e) => setDataD({ ...dataD, status_ayah: e.target.value })}
@@ -591,7 +591,7 @@ export default function BiodataStep({
                   <div className="flex flex-col w-full md:w-2/7">
                     <label>Status</label>
                     <select
-                      readOnly={!isEditing}      
+                      disabled={!isEditing}      
                       required={isEditing}
                       value={dataD?.status_ibu ?? ""}    
                       onChange={(e) => setDataD({ ...dataD, status_ibu: e.target.value })}
