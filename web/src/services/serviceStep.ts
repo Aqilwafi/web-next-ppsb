@@ -15,7 +15,7 @@ export async function initUserStepStatus(userId: string): Promise<UserStepStatus
     const data = await res.json();
     if (!res.ok || !data.success) throw new Error(data.message);
     return data.data as UserStepStatus[];
-  } catch (err) {
+  } catch (err : unknown) {
     console.error("initUserStepStatus error:", err);
     return null;
   }
@@ -31,7 +31,7 @@ export async function insertUserStepStatus(userId: string, step: number): Promis
     const data = await res.json();
     if (!res.ok || !data.success) throw new Error(data.message);
     return data.data as UserStepStatus;
-  } catch (err) {
+  } catch (err : unknown) {
     console.error("insertUserStepStatus error:", err);
     return null;
   }
@@ -47,7 +47,7 @@ export async function fetchUserSteps(userId: string): Promise<UserStepStatus[]> 
     const data = await res.json();
     if (!res.ok || !data.success) throw new Error(data.message);
     return data.data as UserStepStatus[];
-  } catch (err) {
+  } catch (err : unknown) {
     console.error("fetchUserSteps error:", err);
     return [];
   }
@@ -65,7 +65,7 @@ export async function fetchAllSteps(): Promise<RegistrationStep[]> {
 
     if (error) throw error;
     return data as RegistrationStep[];
-  } catch (err) {
+  } catch (err : unknown) {
     console.error("fetchAllSteps error:", err);
     return [];
   }

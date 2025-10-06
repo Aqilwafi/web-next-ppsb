@@ -83,7 +83,7 @@ export async function POST(req: NextRequest) {
       await supabase.from("users").delete().eq("id", newUser.id);
       throw nestedError;
     }
-  } catch (err) {
-    return NextResponse.json({ success: false, message:"Internal Server Error" });
+  } catch (err: unknown) {
+    return NextResponse.json({ success: false, message: err + "Internal Server Error" });
   }
 }

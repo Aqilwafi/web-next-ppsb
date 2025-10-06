@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
     }
 
     return NextResponse.json({ success: true, results });
-  } catch (err) {
+  } catch (err : unknown) {
     console.error("Upload multi error:", err);
     return NextResponse.json({ success: false }, { status: 500 });
   }

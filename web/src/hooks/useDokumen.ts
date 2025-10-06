@@ -23,7 +23,7 @@ export function useDokumen(user: unknown) {
 
       const results = await uploadMultiDokumen(user, siswaID, rawKK, rawKTP, rawFoto);
       return results;
-    } catch (err) {
+    } catch (err : unknown) {
       setError(err);
       throw err;
     } finally {

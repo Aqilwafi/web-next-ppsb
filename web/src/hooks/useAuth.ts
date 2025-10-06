@@ -16,7 +16,7 @@ export function useAuth() {
       try {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
-      } catch (err) {
+      } catch (err : unknown) {
         console.error("error");
       } finally {
         setLoading(false);
@@ -34,7 +34,7 @@ export function useAuth() {
       if (!loggedInUser) throw new Error("Email atau password salah");
       setUser(loggedInUser);
       router.push("/dashboard");
-    } catch (err) {
+    } catch (err : unknown) {
       setError("Login gagal");
     } finally {
       setLoadingLogin(false);
@@ -47,7 +47,7 @@ export function useAuth() {
       //await logoutUser();
       setUser(null);
       router.push("/login");
-    } catch (err) {
+    } catch (err : unknown) {
       console.error(err);
     } finally {
       setLoadingLogout(false);

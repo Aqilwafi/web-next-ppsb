@@ -23,8 +23,8 @@ const [hasilUpload, setHasilUpload] = useState<UploadResult[]>([]);
       const results = await inputDokumen();
       setHasilUpload(results);
       onComplete(); // step complete jika semua sukses
-    } catch (err) {
-      alert("Gagal upload: ");
+    } catch (err : unknown) {
+      alert("Gagal upload: " +  err);
     }
   };
 

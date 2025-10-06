@@ -22,7 +22,7 @@ export default function PembayaranStep({
       if (!isComplete) onComplete();
       // Update status step
       
-    } catch (err) {
+    } catch (err : unknown) {
       console.error(err);
       alert("Terjadi kesalahan saat konfirmasi pembayaran");
     } finally {

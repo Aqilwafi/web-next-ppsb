@@ -14,7 +14,7 @@ export function useRegister() {
     try {
       await registerUser(formData);
       router.push("/login");
-    } catch (err) {
+    } catch (err : unknown) {
       setError(err);
     } finally {
       setLoading(false);

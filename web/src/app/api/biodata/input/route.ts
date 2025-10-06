@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
       data: { csb: csbUpsert, siswa: siswaUpsert, ortu: ortuUpsert, wali: waliUpsert, tempat: tempatUpsert },
     });
 
-  } catch (err) {
+  } catch (err : unknown) {
     console.error("Upsert MultiTable API error:", err);
     return NextResponse.json({ success: false}, { status: 500 });
   }

@@ -99,7 +99,7 @@ export function useBiodata(userId: string) {
     console.log(dataF);
 
     setError(null);
-  } catch (err) {
+  } catch (err : unknown) {
     setError(err || "Gagal mengambil biodata.");
   } finally {
     setLoading(false);
@@ -122,7 +122,7 @@ export function useBiodata(userId: string) {
 
       //await fetchData(); // Refresh data setelah input
       setError(null);
-    } catch (err) {
+    } catch (err : unknown) {
       setError(err || "Gagal mengirim biodata.");
     }
     finally {

@@ -12,7 +12,7 @@ export async function GET() {
     if (error) throw error;
 
     return NextResponse.json({ success: true, data }, { status: 200 });
-  } catch (err) {
+  } catch (err : unknown) {
     console.error("fetchAllSteps error:", err);
     return NextResponse.json(
       { success: false},

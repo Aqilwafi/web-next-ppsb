@@ -32,7 +32,7 @@ export default function BiodataStep({
       //console.log(dataA, dataB, dataC, dataD, dataE, dataF);
       //await mutate();
       if (!isComplete) onComplete();
-    } catch (err) {
+    } catch (err : unknown) {
       console.error("Gagal menyimpan data:", err);
     }
   };

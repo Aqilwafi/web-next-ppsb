@@ -37,7 +37,7 @@ export default function DashboardPage() {
 
     try {
       await handleMarkStep(stepId);
-    } catch (err) {
+    } catch (err : unknown) {
       setErrorStep("Gagal menandai step");
     } finally {
       setLoadingStep(null);
