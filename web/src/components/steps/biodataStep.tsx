@@ -18,9 +18,9 @@ export default function BiodataStep({
   const [isEditing, setIsEditing] = useState(true);
   const [statusRumah, setStatusRumah] = useState();
   const [tinggalBersama, setTinggalBersama] = useState();
-  console.log(dataE);
-  console.log(dataD);
-  console.log(dataB);
+  //console.log(dataE);
+  //console.log(dataD);
+  //console.log(dataB);
 
   const handleClick = async () => {
     try {
