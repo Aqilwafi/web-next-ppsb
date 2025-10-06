@@ -131,7 +131,7 @@ export default function BiodataStep({
                             readOnly={!isEditing}
                             required={isEditing}
                             type="text"
-                            value={dataC?.tempat_lahir}
+                            value={dataC?.tempat_lahir ?? ""}
                             onChange={(e) => setDataC({ ...dataC, tempat_lahir: e.target.value })}
                             className={`border rounded-lg px-3 py-2 ${
                               isEditing
@@ -146,7 +146,7 @@ export default function BiodataStep({
                           readOnly={!isEditing}
                           required={isEditing}
                           type="date"
-                          value={dataC?.tanggal_lahir}
+                          value={dataC?.tanggal_lahir ?? ""}
                           onChange={(e) => setDataC({ ...dataC, tanggal_lahir: e.target.value })}
                           className={`border rounded-lg px-3 py-2 ${
                               isEditing
@@ -159,7 +159,7 @@ export default function BiodataStep({
                         <label>NISN</label>
                         <input
                             type="text"
-                            value={dataC?.nisn}
+                            value={dataC?.nisn ?? ""}
                             readOnly={!isEditing}
                             required={isEditing}
                             maxLength={10}
@@ -181,7 +181,7 @@ export default function BiodataStep({
                             type="text"
                             readOnly={!isEditing}
                             required={isEditing}
-                            value={dataC?.nik}
+                            value={dataC?.nik ?? ""}
                             maxLength={16}
                             inputMode="numeric"
                             pattern="[0-9]*" 
@@ -197,7 +197,7 @@ export default function BiodataStep({
                         <label>No. KK</label>
                         <input
                             type="text"
-                            value={dataC?.no_kk}
+                            value={dataC?.no_kk ?? ""}
                             readOnly={!isEditing}
                             required={isEditing}
                             maxLength={16}
@@ -249,7 +249,7 @@ export default function BiodataStep({
                           <select
                             disabled={!isEditing}
                             required={isEditing}
-                            value={dataC?.golongan_darah}
+                            value={dataC?.golongan_darah ?? ""}
                             onChange={(e) => setDataC({ ...dataC, golongan_darah: e.target.value })}
                             className={`border rounded-lg px-3 py-2 ${
                               isEditing ? "bg-white text-gray-700" : "bg-gray-100 text-gray-500 cursor-not-allowed"
@@ -267,7 +267,7 @@ export default function BiodataStep({
                       <label>Penyakit</label>
                       <textarea
                       readOnly={!isEditing}
-                      value={dataC?.penyakit}
+                      value={dataC?.penyakit ?? ""}
                       onChange={(e) => setDataC({ ...dataC, penyakit: e.target.value })}
                       className={`border rounded-lg px-3 py-2 ${
                           isEditing ? "bg-white text-gray-700" : "bg-gray-100 text-gray-500 cursor-not-allowed"
@@ -286,7 +286,7 @@ export default function BiodataStep({
                       type="text"
                       readOnly={!isEditing}
                       required={isEditing}
-                      value={dataB?.asal_sekolah}
+                      value={dataB?.asal_sekolah ?? ""}
                       onChange={(e) => setDataB({ ...dataB, asal_sekolah: e.target.value })}
                       className={`border rounded-lg px-3 py-2 ${
                         isEditing ? "bg-white text-gray-700" : "bg-gray-100 text-gray-500 cursor-not-allowed"
@@ -302,7 +302,7 @@ export default function BiodataStep({
                       inputMode="numeric"
                       pattern="[0-9]*"
                       maxLength={8}
-                      value={dataB?.npsn}
+                      value={dataB?.npsn ?? ""}
                       onChange={(e) => setDataB({ ...dataB, npsn: e.target.value })}
                       className={`border rounded-lg px-3 py-2 ${
                         isEditing ? "bg-white text-gray-700" : "bg-gray-100 text-gray-500 cursor-not-allowed"
@@ -334,7 +334,7 @@ export default function BiodataStep({
                     <textarea
                     readOnly={!isEditing}
                     required={isEditing}
-                    value={dataB?.alamat_pendidikan_sebelumnya}
+                    value={dataB?.alamat_pendidikan_sebelumnya ?? ""}
                     onChange={(e) => setDataB({ ...dataB, alamat_pendidikan_sebelumnya: e.target.value })}
                     className={`border rounded-lg px-3 py-2 ${
                         isEditing ? "bg-white text-gray-700" : "bg-gray-100 text-gray-500 cursor-not-allowed"
@@ -733,7 +733,7 @@ export default function BiodataStep({
                     <label>Pendidikan</label>
                     <select
                       disabled={!isEditing}
-                      value={dataE?.pendidikan_wali}
+                      value={dataE?.pendidikan_wali ?? ""}
                       onChange={(e) => setDataE({ ...dataE, pendidikan_wali: e.target.value })}
                       className={`border rounded-lg px-3 py-2 ${
                         isEditing ? "bg-white text-gray-700" : "bg-gray-100 text-gray-500 cursor-not-allowed"
