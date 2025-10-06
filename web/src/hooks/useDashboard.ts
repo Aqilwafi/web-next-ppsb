@@ -2,9 +2,10 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { UserLoginResponse } from "@/types/userType";
 
 export function useDashboard() {
-  const [user, setUser] = useState<unknown>(null);
+  const [user, setUser] = useState<UserLoginResponse>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 

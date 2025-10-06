@@ -15,8 +15,8 @@ export async function registerUser(formData: UserRegister) {
   }
 
   return {
-    user: data.user,
-    profile: data.profile,
+    user: data.user as { id: number; email: string; username: string },
+    profile: data.profile as Record<string, unknown>,
   };
 }
 
@@ -33,24 +33,23 @@ export async function loginUser(
   const data: UserLoginResponse = await res.json();
 
   if (!res.ok || !data.success) {
-    return { 
-      success: false, 
-      message: data.message || "Login gagal"
+    return {
+      success: false,
+      message: data.message || "Login gagal",
     };
   }
 
-  // token sudah diset via cookie HttpOnly → tidak perlu di-handle disini
-  return { 
-    success: true, 
-    message: "Login berhasil", 
-    user: data.user 
+  return {
+    success: true,
+    message: "Login berhasil",
+    user: data.user,
   };
 }
 
 export async function getCurrentUser() {
   const res = await fetch("/api/auth/me", {
     method: "GET",
-    credentials: "include", // penting biar cookie terkirim
+    credentials: "include",
   });
 
   const data = await res.json();
@@ -59,5 +58,5 @@ export async function getCurrentUser() {
     return null;
   }
 
-  return data.user;
+  return data.user as { id: number; email: string; username: string };
 }
