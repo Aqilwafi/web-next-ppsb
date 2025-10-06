@@ -35,7 +35,7 @@ const [hasilUpload, setHasilUpload] = useState<UploadResult[]>([]);
   };
 
   return (
-  <div className="bg-white rounded-lg shadow-md text-black">
+  <div className="p-6 max-w-md mx-auto bg-white rounded-lg shadow-md text-black">
     <h2 className="bg-blue-900 text-white px-4 py-2 font-bold rounded-t-md mb-4 text-lg">
       Upload Dokumen
     </h2>
@@ -48,7 +48,7 @@ const [hasilUpload, setHasilUpload] = useState<UploadResult[]>([]);
           type="file"
           accept=".pdf,image/*"
           onChange={e => setRawKTP(e.target.files?.[0] || null)}
-          className="border rounded px-3 py-2 hover:border-blue-500 transition-colors cursor-pointer"
+          className="border rounded px-3 py-2 hover:border-blue-500 transition-colors"
         />
       </label>
 
@@ -59,7 +59,7 @@ const [hasilUpload, setHasilUpload] = useState<UploadResult[]>([]);
           type="file"
           accept=".pdf,image/*"
           onChange={e => setRawKK(e.target.files?.[0] || null)}
-          className="border rounded px-3 py-2 hover:border-blue-500 transition-colors cursor-pointer"
+          className="border rounded px-3 py-2 hover:border-blue-500 transition-colors"
         />
       </label>
 
@@ -70,7 +70,7 @@ const [hasilUpload, setHasilUpload] = useState<UploadResult[]>([]);
           type="file"
           accept=".pdf,image/*"
           onChange={e => setRawFoto(e.target.files?.[0] || null)}
-          className="border rounded px-3 py-2 hover:border-blue-500 transition-colors cursor-pointer"
+          className="border rounded px-3 py-2 hover:border-blue-500 transition-colors"
         />
       </label>
 
@@ -78,17 +78,34 @@ const [hasilUpload, setHasilUpload] = useState<UploadResult[]>([]);
         <button
           type="submit"
           disabled={loading}
-          className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors mt-2 cursor-pointer"
+          className="bg-blue-600 text-white py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors mt-2"
         >
           {loading ? "Mengupload..." : "Upload & Tandai Complete"}
         </button>
       )}
 
       {isComplete && (
-        <p className="text-green-600 font-medium mt-2">Terima kasih, dokumen Anda telah berhasil diupload ✅</p>
+        <p className="text-green-600 font-medium mt-2">Proses sudah selesai ✅</p>
       )}
     </form>
 
+    {/* Daftar hasil upload */}
+    {hasilUpload.length > 0 && (
+      <ul className="mt-4 list-disc pl-6">
+        {hasilUpload.map((item, idx) => (
+          <li key={idx}>
+            <span className="font-semibold">{item.jenis.toUpperCase()}</span> →{" "}
+            <a
+              href={item.url}
+              target="_blank"
+              className="text-blue-600 underline hover:text-blue-800"
+            >
+              {item.url}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
 
     {/* Error */}
     {error && <p className="text-red-600 mt-2">{error}</p>}

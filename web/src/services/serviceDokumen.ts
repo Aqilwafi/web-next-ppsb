@@ -12,6 +12,7 @@ export async function uploadMultiDokumen(
     formData.append("fileA", FileKK);
     formData.append("fileB", FileKTP);
     formData.append("fileC", FileFoto);
+    console.log(userID, siswaID, FileKK, FileKTP, FileFoto);
 
     const res = await fetch("/api/dokumen/upload", {
       method: "POST",

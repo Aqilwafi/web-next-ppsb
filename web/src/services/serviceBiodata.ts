@@ -38,5 +38,5 @@ export async function fetchBioProfile() {
   const res = await fetch("/api/biodata/profile");
   const data = await res.json();
   if (!data.success) throw new Error(data.message);
-  return data.data;
+  return data.data?.id ?? null;
 }

@@ -10,7 +10,7 @@ export function useDokumen(user: unknown) {
   const [error, setError] = useState<string | null>(null);
 
   const inputDokumen = async () => {
-    if ( user || !rawKK || !rawKTP || !rawFoto) {
+    if ( !user || !rawKK || !rawKTP || !rawFoto) {
       throw new Error("Semua file harus diisi sebelum upload");
     }
 
@@ -35,6 +35,7 @@ export function useDokumen(user: unknown) {
     } else {
       console.error("Gagal mengambil biodata."); // fallback
     }
+    throw err; 
     } finally {
       setLoading(false);
     }

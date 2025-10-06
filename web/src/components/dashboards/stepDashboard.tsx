@@ -5,8 +5,7 @@ import RegistrasiStep from "@/components/steps/registrasiStep";
 import PembayaranStep from "@/components/steps/pembayaranStep";
 import BiodataStep from "@/components/steps/biodataStep";
 import DokumenStep from "@/components/steps/dokumenStep";
-import UjianStep from "@/components/steps/ujianStep";
-import PersetujuanStep from "@/components/steps/persetujuanStep";
+import ValidasiDokumenStep from "@/components/steps/persetujuanStep";
 import LastStep from "@/components/steps/lastStep";
 import  {DashboardStepProps}  from "@/types/propsType";
 
@@ -15,9 +14,8 @@ const stepComponents: Record<number, React.ComponentType<DashboardStepProps>> = 
   2: PembayaranStep,
   3: BiodataStep,
   4: DokumenStep,
-  5: UjianStep,
-  6: PersetujuanStep,
-  7: LastStep,
+  5: ValidasiDokumenStep,
+  6: LastStep,
 };
 
 

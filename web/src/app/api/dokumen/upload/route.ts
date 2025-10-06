@@ -55,7 +55,7 @@ export async function POST(req: NextRequest) {
       const { error: dbErr } = await supabase.from("dokumen").insert({
         siswa_id: siswaId,
         nama_file: file.name,
-        jenis,
+        tipe_file: jenis,
         url: urlData.publicUrl,
       });
 
