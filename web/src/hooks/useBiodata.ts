@@ -39,13 +39,13 @@ export function useBiodata(userId: string) {
     }
   };
 
-  const inputData = async (formDataB: CSBProfile, formDataC: BiodataSiswa, formDataD: BiodataOrtu, formDataE: BiodataWali, formdataF: TempatTinggal) => {
+  const inputData = async (formDataB: CSBProfile, formDataC: BiodataSiswa, formDataD: BiodataOrtu, formDataE: BiodataWali | null, formdataF: TempatTinggal) => {
     try {
       setLoading(true);
       /*const DnB = denormalizeCSB(formDataB);
       const DnC = denormalizeSiswa(formDataC);
       const DnD = denormalizeOrtu(formDataD);*/
-      const DnE = denormalizeWali(formDataE);
+      const DnE = formDataE ? denormalizeWali(formDataE) : null;
       //const DnF = denormalizeTempat(formdataF);
       
       //await inputBiodata(userId, DnB, DnC, DnD, DnE, DnF);
