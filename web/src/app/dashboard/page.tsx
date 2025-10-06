@@ -10,7 +10,7 @@ import { useState } from "react";
 
 export default function DashboardPage() {
   const { user, loading, handleLogout } = useDashboard();
-  const nama = user?.un || "User";
+  const nama = user?.username || "User";
 
   const {
     stepList,
