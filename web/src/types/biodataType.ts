@@ -60,7 +60,7 @@ export type BiodataOrtu = {
 
 export type BiodataWali = {
   id?: number | null;
-  siswa_id: string;
+  siswa_id?: string | null;
   nama_wali?: string | null;
   nik_wali?: string | null;
   tempat_lahir_wali?: string | null;
