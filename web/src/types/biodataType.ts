@@ -8,7 +8,7 @@ export type CSBProfile = {
   lembaga: string | null;
   tingkatan?: string | null;
   asal_sekolah?: string | null;
-  tahun_lulus?: number | null;
+  tahun_lulus?: string | null;
   alamat_pendidikan_sebelumnya?: string | null;
   npsn?: string | null;
   created_at?: string; // ISO date string
