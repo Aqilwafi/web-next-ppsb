@@ -14,12 +14,12 @@ export function useBiodata(userId: string) {
 
       const [dataB, setDataB] = useState<CSBProfile>({
         id: "",
-        lembaga: null,
-        tingkatan: null,
-        asal_sekolah: null,
+        lembaga: "",
+        tingkatan: "",
+        asal_sekolah: "",
         tahun_lulus: null,
-        alamat_pendidikan_sebelumnya: null,
-        npsn: null,
+        alamat_pendidikan_sebelumnya: "",
+        npsn: "",
         created_at: "",
       });
 
@@ -67,8 +67,7 @@ export function useBiodata(userId: string) {
         created_at: "",
       });
 
-      // ✅ Boleh null karena memang tidak wajib
-      const [dataE, setDataE] = useState<BiodataWali | null>(null);
+      const [dataE, setDataE] = useState<BiodataWali | null>(null); // optional
 
       const [dataF, setDataF] = useState<TempatTinggal>({
         id: "",
@@ -82,29 +81,31 @@ export function useBiodata(userId: string) {
   const [error, setError] = useState<string | null>(null);
 
   const fetchData = async () => {
-    try {
-      setLoading(true);
+  try {
+    setLoading(true);
 
-      const { akun, csb, siswa, ortu, tempat, wali } = await fetchBioSiswa();
-      console.log(wali);
-       
-      setDataA(normalizeAkun(akun ?? null));
-      setDataB(normalizeCSB(csb ?? null));
-      setDataC(normalizeSiswa(siswa ?? null));
-      setDataD(normalizeOrtu(ortu ?? null));
-      setDataE(normalizeWali(wali ?? null));
-      setDataF(normalizeTempat(tempat ?? null));
-      console.log(dataE);
-      console.log(dataD);
-      console.log(dataF);
+    const { akun, csb, siswa, ortu, tempat, wali } = await fetchBioSiswa();
+    console.log(wali);
 
-      setError(null);
-    } catch (err) {
-      setError(err || "Gagal mengambil biodata.");
-    } finally {
-      setLoading(false);
-    }
-  };
+    setDataA(normalizeAkun(akun));
+    setDataB(normalizeCSB(csb));
+    setDataC(normalizeSiswa(siswa));
+    setDataD(normalizeOrtu(ortu));
+    setDataE(normalizeWali(wali)); // boleh null
+    setDataF(normalizeTempat(tempat));
+
+    console.log(dataE);
+    console.log(dataD);
+    console.log(dataF);
+
+    setError(null);
+  } catch (err) {
+    setError(err || "Gagal mengambil biodata.");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   const inputData = async (formDataB: CSBProfile, formDataC: BiodataSiswa, formDataD: BiodataOrtu, formDataE: BiodataWali | null, formdataF: TempatTinggal) => {
     try {
