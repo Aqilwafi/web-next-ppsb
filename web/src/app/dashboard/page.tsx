@@ -10,10 +10,8 @@ import { useState } from "react";
 
 export default function DashboardPage() {
   const { user, loading, handleLogout } = useDashboard();
-  if (loading || !user) return <div>Loading...</div>;
 
-  const nama = user.un || "User";
-
+  // ✅ gunakan fallback string jika user belum ada
   const {
     stepList,
     userSteps,
@@ -22,14 +20,15 @@ export default function DashboardPage() {
     getStepColor,
     toggleStep,
     handleMarkStep
-  } = useKonten(user.id.toString());
+  } = useKonten(user?.id.toString() ?? "");
 
-  // Loading & error per step
   const [loadingStep, setLoadingStep] = useState<number | null>(null);
   const [errorStep, setErrorStep] = useState<string | null>(null);
 
-  if (loading) return <div>Loading...</div>;
-  if (!user) return null;
+  // Render loading state
+  if (loading || !user) return <div>Loading...</div>;
+
+  const nama = user.un || "User";
 
   const handleComplete = async (stepId: number) => {
     setLoadingStep(stepId);
@@ -37,7 +36,7 @@ export default function DashboardPage() {
 
     try {
       await handleMarkStep(stepId);
-    } catch (err : unknown) {
+    } catch (err: unknown) {
       setErrorStep("Gagal menandai step");
     } finally {
       setLoadingStep(null);
