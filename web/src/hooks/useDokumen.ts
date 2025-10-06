@@ -21,6 +21,10 @@ export function useDokumen(user: unknown) {
       const siswaID = await fetchBioProfile();
       if (!siswaID) throw new Error("Gagal ambil Siswa ID");
 
+      if (typeof user !== "string") {
+        throw new Error("User ID tidak valid");
+      }
+
       const results = await uploadMultiDokumen(user, siswaID, rawKK, rawKTP, rawFoto);
       return results;
     } catch (err : unknown) {
