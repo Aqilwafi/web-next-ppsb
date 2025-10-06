@@ -17,7 +17,13 @@ export function useAuth() {
         const currentUser = await getCurrentUser();
         setUser(currentUser);
       } catch (err : unknown) {
-        console.error("error");
+        if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
       } finally {
         setLoading(false);
       }
@@ -48,7 +54,13 @@ export function useAuth() {
       setUser(null);
       router.push("/login");
     } catch (err : unknown) {
-      console.error(err);
+      if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
     } finally {
       setLoadingLogout(false);
     }

@@ -16,7 +16,13 @@ export async function initUserStepStatus(userId: string): Promise<UserStepStatus
     if (!res.ok || !data.success) throw new Error(data.message);
     return data.data as UserStepStatus[];
   } catch (err : unknown) {
-    console.error("initUserStepStatus error:", err);
+    if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
     return null;
   }
 }
@@ -32,7 +38,13 @@ export async function insertUserStepStatus(userId: string, step: number): Promis
     if (!res.ok || !data.success) throw new Error(data.message);
     return data.data as UserStepStatus;
   } catch (err : unknown) {
-    console.error("insertUserStepStatus error:", err);
+    if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
     return null;
   }
 }
@@ -48,7 +60,13 @@ export async function fetchUserSteps(userId: string): Promise<UserStepStatus[]> 
     if (!res.ok || !data.success) throw new Error(data.message);
     return data.data as UserStepStatus[];
   } catch (err : unknown) {
-    console.error("fetchUserSteps error:", err);
+    if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
     return [];
   }
 }
@@ -66,7 +84,13 @@ export async function fetchAllSteps(): Promise<RegistrationStep[]> {
     if (error) throw error;
     return data as RegistrationStep[];
   } catch (err : unknown) {
-    console.error("fetchAllSteps error:", err);
+    if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
     return [];
   }
 }

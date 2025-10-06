@@ -31,8 +31,13 @@ export function useKonten(userId: string) {
       setCurrentStep(lastCompletedStep + 1);
 
     } catch (err : unknown) {
-      console.error("fetchData error:", err);
-      setError(err || "Gagal mengambil data dashboard.");
+      if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
     } finally {
       setLoading(false);
     }
@@ -52,8 +57,13 @@ export function useKonten(userId: string) {
         // Biarkan user menandai ulang step yang sudah dilewati
         await insertUserStepStatus(userId, stepId);
       } catch (err : unknown) {
-        console.error("Gagal menandai ulang step:", err);
-        setError(err || "Gagal menandai ulang step.");
+        if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
       } 
     }
 
@@ -72,8 +82,13 @@ export function useKonten(userId: string) {
       // (opsional) sync ulang dari server biar lebih valid
       // await fetchData();
     } catch (err : unknown) {
-      console.error("Gagal menandai step:", err);
-      setError(err || "Gagal menandai step.");
+      if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
     }
   };
 

@@ -33,7 +33,13 @@ export default function BiodataStep({
       //await mutate();
       if (!isComplete) onComplete();
     } catch (err : unknown) {
-      console.error("Gagal menyimpan data:", err);
+      if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
     }
   };
 

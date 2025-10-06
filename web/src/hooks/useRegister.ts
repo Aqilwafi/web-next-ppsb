@@ -15,7 +15,13 @@ export function useRegister() {
       await registerUser(formData);
       router.push("/login");
     } catch (err : unknown) {
-      setError(err);
+      if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
     } finally {
       setLoading(false);
     }

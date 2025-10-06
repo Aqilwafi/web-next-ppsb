@@ -100,7 +100,13 @@ export function useBiodata(userId: string) {
 
     setError(null);
   } catch (err : unknown) {
-    setError(err || "Gagal mengambil biodata.");
+    if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
   } finally {
     setLoading(false);
   }
@@ -123,7 +129,13 @@ export function useBiodata(userId: string) {
       //await fetchData(); // Refresh data setelah input
       setError(null);
     } catch (err : unknown) {
-      setError(err || "Gagal mengirim biodata.");
+      if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
     }
     finally {
       setLoading(false);

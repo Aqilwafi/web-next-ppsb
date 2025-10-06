@@ -24,7 +24,13 @@ const [hasilUpload, setHasilUpload] = useState<UploadResult[]>([]);
       setHasilUpload(results);
       onComplete(); // step complete jika semua sukses
     } catch (err : unknown) {
-      alert("Gagal upload: " +  err);
+      if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
     }
   };
 

@@ -24,8 +24,13 @@ export function useDokumen(user: unknown) {
       const results = await uploadMultiDokumen(user, siswaID, rawKK, rawKTP, rawFoto);
       return results;
     } catch (err : unknown) {
-      setError(err);
-      throw err;
+      if (err instanceof Error) {
+      console.error(err.message); // Error object
+    } else if (typeof err === "string") {
+      console.error(err); // Kalau API throw string
+    } else {
+      console.error("Gagal mengambil biodata."); // fallback
+    }
     } finally {
       setLoading(false);
     }
