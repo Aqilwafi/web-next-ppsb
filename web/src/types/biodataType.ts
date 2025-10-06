@@ -15,7 +15,7 @@ export type CSBProfile = {
 };
 
 export type BiodataSiswa = {
-  id: number;
+  id?: string | null;
   profile_id: string; // UUID
   nama_lengkap: string | null;
   nisn?: string | null;
@@ -34,7 +34,7 @@ export type BiodataSiswa = {
 };
 
 export type BiodataOrtu = {
-  id: number;
+  id?: string | null;
   siswa_id: string;
   nama_ayah?: string | null;
   nama_ibu?: string | null;
@@ -59,7 +59,7 @@ export type BiodataOrtu = {
 };
 
 export type BiodataWali = {
-  id?: number | null;
+  id?: string | null;
   siswa_id?: string | null;
   nama_wali?: string | null;
   nik_wali?: string | null;
@@ -73,7 +73,7 @@ export type BiodataWali = {
 };
 
 export type TempatTinggal = {
-  id: number;
+  id?: string | null;
   siswa_id: string;
   status_rumah?: string | null;
   tinggal_bersama?: string | null;
