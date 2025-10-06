@@ -34,7 +34,7 @@ export default function DashboardStep({
   return (
     <div className="mt-6 mb-3">
     <StepComponent
-      userId={user}
+      user={user}
       isComplete={isComplete}
       onComplete={onComplete}
       isLoading={isLoading} // teruskan ke komponen step
