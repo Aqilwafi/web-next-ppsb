@@ -16,7 +16,7 @@ export type UserLogin = {
 // types/auth.d.ts
 export type UserLoginResponse = {
   success: boolean;
-  user?: any;
+  user?: unknown;
   message?: string;
 };
 
