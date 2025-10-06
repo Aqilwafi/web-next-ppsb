@@ -2,15 +2,20 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { UserLoginResponse } from "@/types/userType";
+
+// tipe user sederhana, sesuai isi localStorage
+type LocalUser = {
+  id: number;
+  un: string; // disimpan sebagai 'un' di localStorage
+};
 
 export function useDashboard() {
-  const [user, setUser] = useState<UserLoginResponse>(null);
+  const [user, setUser] = useState<LocalUser | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
-    const storedUser = localStorage.getItem("user"); //memang aku namakan user, walaupun isinya id
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     } else {
