@@ -71,7 +71,7 @@ export function useKonten(userId: string) {
 
       // (opsional) sync ulang dari server biar lebih valid
       // await fetchData();
-    } catch err : unknown {
+    } catch (err : unknown) {
       console.error("Gagal menandai step:", err);
       setError(err || "Gagal menandai step.");
     }
