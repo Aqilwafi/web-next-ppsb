@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { DashboardStepProps } from "@/types/propsType";
+import { useDokumen } from "@/hooks/useDokumen";
 
 export default function PembayaranStep({
   user,
@@ -10,14 +11,20 @@ export default function PembayaranStep({
   isLoading = false,
 }: DashboardStepProps) {
   const [loading, setLoading] = useState(false);
+  const { bukti, setBukti, inputBukti } = useDokumen(user)
    // ✅ Tambahkan state
 
   const handleSubmit = async (e: React.FormEvent) => {
+
     
     setLoading(true);
+     if (!user || !bukti) {
+      alert("Lengkapi Bukti Pembayaran");
+      return;
+    }
     try {
       // Simulasi proses async
-
+      await inputBukti();
       alert("Konfirmasi pembayaran berhasil!");
       if (!isComplete) onComplete();
       // Update status step
@@ -38,7 +45,8 @@ export default function PembayaranStep({
 
   return (
     <div className="flex flex-col gap-6">
-      <h1 className="text-3xl font-bold text-blue-600">
+       <div className="p-4 border rounded-lg bg-white">
+      <h1 className="bg-blue-900 text-white px-4 py-2 font-bold mb-3">
         Pembayaran Formulir Pendaftaran
       </h1>
       <div className="bg-gray-100 p-4 rounded-md">
@@ -72,23 +80,36 @@ export default function PembayaranStep({
 </div>
 
 
-     <form
+    <form
   onSubmit={handleSubmit}
   className="flex flex-col gap-4 w-full max-w-md mt-4"
 >
   {!isComplete && (
-    <button
-      type="submit"
-      disabled={loading}
-      className={`cursor-pointer bg-blue-600 text-white py-1 px-4 rounded-lg hover:bg-blue-700 transition-all duration-150 ${
-        loading ? "w-32" : "w-full"
-      }`}
-    >
-      {loading && (
-        <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
-      )}
-      {loading ? "Menyimpan..." : "Konfirmasi Pembayaran"}
-    </button>
+    <>
+      <label className="flex flex-col">
+        <span className="font-medium mb-1">Upload Bukti Pembayaran</span>
+        <input
+          type="file"
+          accept=".pdf,image/*"
+          onChange={(e) => setBukti(e.target.files?.[0] || null)}
+          className="border rounded px-3 py-2 hover:border-blue-500 transition-colors cursor-pointer"
+          required
+        />
+      </label>
+
+      <button
+        type="submit"
+        disabled={loading}
+        className={`cursor-pointer bg-blue-600 text-white py-1 px-4 rounded-lg hover:bg-blue-700 transition-all duration-150 ${
+          loading ? "w-32" : "w-full"
+        }`}
+      >
+        {loading && (
+          <span className="animate-spin border-2 border-white border-t-transparent rounded-full w-4 h-4"></span>
+        )}
+        {loading ? "Menyimpan..." : "Konfirmasi Pembayaran"}
+      </button>
+    </>
   )}
 
   {isComplete && (
@@ -96,6 +117,8 @@ export default function PembayaranStep({
   )}
 </form>
 
+
+    </div>
     </div>
   );
 }

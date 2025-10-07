@@ -28,3 +28,30 @@ export async function uploadMultiDokumen(
     throw err;
   }
 }
+
+export async function uploadBukti(
+  userID: string,
+  siswaID: string,
+  Bukti: File
+) {
+  try {
+    const formData = new FormData();
+    formData.append("user_id", userID);
+    formData.append("siswa_id", siswaID);
+    formData.append("file", Bukti);
+    formData.append("jenis", "Bukti");
+    
+    const res = await fetch("/api/dokumen/bukti", {
+      method: "POST",
+      body: formData,
+    });
+
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.message || "Upload gagal");
+
+    return data.results; // array { jenis, url, path }
+  } catch (err) {
+    console.error("Service uploadMultiDokumen error:", err);
+    throw err;
+  }
+}

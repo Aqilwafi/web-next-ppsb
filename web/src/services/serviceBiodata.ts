@@ -1,12 +1,12 @@
-import { BiodataSiswa, BiodataOrtu, BiodataWali, CSBProfile, TempatTinggal } from "@/types/biodataType";
+import { BiodataSiswaToDB, BiodataOrtuToDB, BiodataWaliToDB, CSBProfileToDB, TempatTinggalToDB } from "@/types/biodataType";
 
 export async function inputBiodata(
   userID: string,
-  formDataB: CSBProfile,
-  formDataC: BiodataSiswa,
-  formDataD: BiodataOrtu,
-  formDataE: BiodataWali | null,
-  formDataF: TempatTinggal
+  formDataB: CSBProfileToDB,
+  formDataC: BiodataSiswaToDB,
+  formDataD: BiodataOrtuToDB,
+  formDataE: BiodataWaliToDB | null,
+  formDataF: TempatTinggalToDB
 ) {
   const res = await fetch("/api/biodata/input", {
     method: "POST",

@@ -7,7 +7,7 @@ export async function POST(req: NextRequest) {
     const { userID, csb, siswa, ortu, wali, tempat } = await req.json();
     const supabase = await supabaseServer();
 
-    // Ambil userId dari cookie JWT
+    // 🔹 Ambil userId dari cookie JWT
     const token = req.cookies.get("token")?.value;
     if (!token)
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
@@ -32,71 +32,63 @@ export async function POST(req: NextRequest) {
       .select()
       .single();
     if (csbErr) throw csbErr;
-    //console.log(csb);
 
     // 🔹 Upsert biodata_siswa
-    const { id, ...siswaData } = siswa; // hapus id
+    const { id, ...siswaData } = siswa;
     const { data: siswaUpsert, error: siswaErr } = await supabase
       .from("biodata_siswa")
       .upsert([{ profile_id: userId, ...siswaData }], { onConflict: "profile_id" })
       .select()
       .single();
-    //console.log(siswaData);
     if (siswaErr) throw siswaErr;
-    //console.log(siswaData);
 
     const siswaId = siswaUpsert.id;
 
-    const { id: ido, ...ortuData } = ortu; // hapus id
     // 🔹 Upsert biodata_ortu
+    const { id: ido, ...ortuData } = ortu;
     const { data: ortuUpsert, error: ortuErr } = await supabase
       .from("biodata_ortu")
       .upsert([{ siswa_id: siswaId, ...ortuData }], { onConflict: "siswa_id" })
       .select()
       .single();
     if (ortuErr) throw ortuErr;
-    console.log(ortuData);
-    
 
-  
-
-    
+    // ✅ Hanya lakukan upsert wali jika datanya tidak null
+    let waliUpsert = null;
+    if (wali) {
       const { id: idw, ...waliData } = wali;
-      const { data: waliUpsert, error: waliErr } = await supabase
+      const { data, error } = await supabase
         .from("biodata_wali")
         .upsert([{ siswa_id: siswaId, ...waliData }], { onConflict: "siswa_id" })
         .select()
         .single();
+      if (error) throw error;
+      waliUpsert = data;
+    }
 
-      if (waliErr) throw waliErr;
-      
-      console.log("Upsert wali lengkap:", waliData);
-    
-    
-
-    const { id: ids, ...tempatData } = tempat; // hapus id
     // 🔹 Upsert tempat_tinggal
+    const { id: ids, ...tempatData } = tempat;
     const { data: tempatUpsert, error: tempatErr } = await supabase
       .from("tempat_tinggal")
       .upsert([{ siswa_id: siswaId, ...tempatData }], { onConflict: "siswa_id" })
       .select()
       .single();
     if (tempatErr) throw tempatErr;
-    console.log(tempatData);
 
     return NextResponse.json({
       success: true,
       data: { csb: csbUpsert, siswa: siswaUpsert, ortu: ortuUpsert, wali: waliUpsert, tempat: tempatUpsert },
     });
 
-  } catch (err : unknown) {
+  } catch (err: unknown) {
     if (err instanceof Error) {
-      console.error(err.message); // Error object
+      console.error(err.message);
     } else if (typeof err === "string") {
-      console.error(err); // Kalau API throw string
+      console.error(err);
     } else {
-      console.error("Gagal mengambil biodata."); // fallback
+      console.error("Gagal memproses biodata.");
     }
-    return NextResponse.json({ success: false}, { status: 500 });
+
+    return NextResponse.json({ success: false }, { status: 500 });
   }
 }

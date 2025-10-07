@@ -11,7 +11,7 @@ export default function BiodataStep({
   onComplete,
   isLoading = false,
 }: DashboardStepProps) {
-  const { dataA, dataB, setDataB, dataC, setDataC, dataD, setDataD, dataE, setDataE, dataF, setDataF, loading, error, inputData, mutate } = useBiodata(user);
+  const { dataA, dataB, setDataB, dataC, setDataC, dataD, setDataD, dataE, setDataE, dataF, setDataF, loading, error, inputData, fetchData } = useBiodata(user);
   const { handleMarkStep } = useKonten(user);
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
