@@ -155,7 +155,7 @@ export default function BiodataStep({
                           value={dataC?.tanggal_lahir ?? ""}
                           onChange={(e) =>
                               setDataC((prev) =>
-                              prev ? { ...prev, tempat_lahir: e.target.value } : prev
+                              prev ? { ...prev, tanggal_lahir: e.target.value } : prev
                             )
                           }
                           className={`border rounded-lg px-3 py-2 ${
