@@ -14,7 +14,7 @@ export default function BiodataStep({
   const { dataA, dataB, setDataB, dataC, setDataC, dataD, setDataD, dataE, setDataE, dataF, setDataF, loading, error, inputData, fetchData } = useBiodata(user);
   const { handleMarkStep } = useKonten(user);
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 50 }, (_, i) => currentYear - i);
+  const years = Array.from({ length: 50 }, (_, i) => currentYear + 1 - i);
   const [isEditing, setIsEditing] = useState(true);
   const [statusRumah, setStatusRumah] = useState();
   const [tinggalBersama, setTinggalBersama] = useState();
