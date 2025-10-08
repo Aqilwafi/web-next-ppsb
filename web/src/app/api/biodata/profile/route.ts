@@ -20,10 +20,9 @@ export async function GET(req: NextRequest) {
       .select("id")
       .eq("profile_id", userId)
       .single();
-
     if (error) throw error;
 
-    return NextResponse.json({ success: true, data }, { status: 200 });
+    return NextResponse.json({ success: true, data: data }, { status: 200 });
   } catch (err : unknown) {
     if (err instanceof Error) {
       console.error(err.message); // Error object

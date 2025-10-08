@@ -3,24 +3,16 @@ import { supabaseAdmin } from "@/lib/supabaseAdmin";
 
 export async function POST(req: NextRequest) {
   try {
-    const supabase = await supabaseAdmin;
+    const supabase = supabaseAdmin;
     const formData = await req.formData();
 
     const userId = formData.get("user_id") as string | null;
-    const siswaIdStr = formData.get("siswa_id") as string | null;
-    const siswaId = siswaIdStr ? Number(siswaIdStr) : null;
     const jenis = (formData.get("jenis") as string | null)?.toLowerCase(); // contoh: "kk" atau "ijazah"
     const file = formData.get("file") as File | null;
 
     if (!userId) {
       return NextResponse.json(
         { success: false, message: "UserId wajib ada" },
-        { status: 400 }
-      );
-    }
-    if (!siswaId) {
-      return NextResponse.json(
-        { success: false, message: "SiswaId wajib ada" },
         { status: 400 }
       );
     }
@@ -56,12 +48,12 @@ export async function POST(req: NextRequest) {
       .from("dokumen")
       .upsert(
         {
-          siswa_id: siswaId,
+          user_id: userId,
           nama_file: file.name,
           tipe_file: jenis,
           url: publicUrl,
         },
-        { onConflict: "siswa_id,tipe_file" } // pastikan ada unique constraint di kolom ini
+        { onConflict: "user_id, tipe_file" } // pastikan ada unique constraint di kolom ini
       );
 
     if (dbErr) throw new Error(`Upsert DB gagal: ${dbErr.message}`);
@@ -69,7 +61,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       success: true,
       message: "Upload dan upsert berhasil",
-      data: { siswa_id: siswaId, tipe_file: jenis, url: publicUrl },
+      data: { user_id: userId, tipe_file: jenis, url: publicUrl },
     });
   } catch (err: unknown) {
     if (err instanceof Error) {

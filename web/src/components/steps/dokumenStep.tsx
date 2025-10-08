@@ -7,7 +7,7 @@ import { UploadResult } from "@/types/dokumenType";
 
 export default function DokumenStep({ user, isComplete, onComplete }: DashboardStepProps) {
   const { rawKK, rawKTP, rawFoto, setRawKK, setRawKTP, setRawFoto, inputDokumen, loading, error } = useDokumen(user);
-const [hasilUpload, setHasilUpload] = useState<UploadResult[]>([]);
+  const [hasilUpload, setHasilUpload] = useState<UploadResult[]>([]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -47,6 +47,7 @@ const [hasilUpload, setHasilUpload] = useState<UploadResult[]>([]);
         <input
           type="file"
           accept=".pdf,image/*"
+          disabled={isComplete}
           onChange={e => setRawKTP(e.target.files?.[0] || null)}
           className="border rounded px-3 py-2 hover:border-blue-500 transition-colors cursor-pointer"
         />
@@ -58,6 +59,7 @@ const [hasilUpload, setHasilUpload] = useState<UploadResult[]>([]);
         <input
           type="file"
           accept=".pdf,image/*"
+          disabled={isComplete}
           onChange={e => setRawKK(e.target.files?.[0] || null)}
           className="border rounded px-3 py-2 hover:border-blue-500 transition-colors cursor-pointer"
         />
@@ -69,6 +71,7 @@ const [hasilUpload, setHasilUpload] = useState<UploadResult[]>([]);
         <input
           type="file"
           accept=".pdf,image/*"
+          disabled={isComplete}
           onChange={e => setRawFoto(e.target.files?.[0] || null)}
           className="border rounded px-3 py-2 hover:border-blue-500 transition-colors cursor-pointer"
         />

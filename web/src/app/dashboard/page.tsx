@@ -45,11 +45,13 @@ export default function DashboardPage() {
 
   return (
     <main className="min-h-screen bg-gray-50">
-      <DashboardHeader
-        name={nama}
-        handleLogout={handleLogout}
-        loadingLogout={false}
-      />
+      <div className="sticky top-0 z-50 bg-white shadow-md">
+        <DashboardHeader
+          name={nama}
+          handleLogout={handleLogout}
+          loadingLogout={false}
+        />
+      </div>
 
       <div className="relative w-full h-64 md:h-40">
         <Image

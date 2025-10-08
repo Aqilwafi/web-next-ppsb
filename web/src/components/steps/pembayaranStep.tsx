@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { DashboardStepProps } from "@/types/propsType";
 import { useDokumen } from "@/hooks/useDokumen";
 
+
 export default function PembayaranStep({
   user,
   isComplete,
@@ -12,36 +13,19 @@ export default function PembayaranStep({
 }: DashboardStepProps) {
   const [loading, setLoading] = useState(false);
   const { bukti, setBukti, inputBukti } = useDokumen(user)
-   // ✅ Tambahkan state
+ 
+
 
   const handleSubmit = async (e: React.FormEvent) => {
-
-    
-    setLoading(true);
-     if (!user || !bukti) {
-      alert("Lengkapi Bukti Pembayaran");
-      return;
-    }
-    try {
-      // Simulasi proses async
-      await inputBukti();
-      alert("Konfirmasi pembayaran berhasil!");
-      if (!isComplete) onComplete();
-      // Update status step
-      
-    } catch (err : unknown) {
-      if (err instanceof Error) {
-      console.error(err.message); // Error object
-    } else if (typeof err === "string") {
-      console.error(err); // Kalau API throw string
-    } else {
-      console.error("Gagal mengambil biodata."); // fallback
-    }
-      alert("Terjadi kesalahan saat konfirmasi pembayaran");
-    } finally {
-      setLoading(false);
-    }
-  };
+  e.preventDefault();
+  try {
+    await inputBukti();
+    alert("Konfirmasi pembayaran berhasil!");
+    onComplete?.();
+  } catch (err) {
+    alert("Terjadi kesalahan saat konfirmasi pembayaran");
+  }
+};
 
   return (
     <div className="flex flex-col gap-6">
@@ -52,62 +36,71 @@ export default function PembayaranStep({
   </h1>
 
   <div className="bg-gray-50 p-5 rounded-lg border border-gray-200">
-    <p className="text-gray-800 mb-4 leading-relaxed">
-      Sebelum mendapatkan dan mengisi formulir pendaftaran, calon peserta didik wajib terlebih dahulu melakukan
-      pembayaran biaya formulir sesuai jenjang pendidikan berikut:
-    </p>
+  <p className="text-gray-800 mb-4 leading-relaxed">
+    Sebelum mendapatkan dan mengisi formulir pendaftaran, calon peserta didik wajib terlebih dahulu melakukan pembayaran biaya formulir sesuai jenjang pendidikan berikut:
+  </p>
 
-    <div className="space-y-5">
-      {/* --- TPA, KB, TK, PAUD --- */}
-      <div className="bg-white p-4 rounded-md border border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">
-          TPA, KB, dan TK
-        </h2>
-        <p className="text-gray-700">Transfer ke Rekening <span className="font-semibold">PAUD</span></p>
-        <p className="text-gray-700 mb-2">
-          Biaya Formulir: <span className="font-bold text-blue-700">Rp160.000,-</span>
-        </p>
-        <div className="flex items-center justify-between text-sm text-gray-800">
-          <span>No. Rekening: <span className="font-semibold">1752831078</span></span>
-          {!isComplete && (
-            <button
-              type="button"
-              className="ml-2 text-blue-600 hover:text-blue-800"
-              onClick={() => navigator.clipboard.writeText("1752831078")}
-            >
-              Copy
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* --- MI --- */}
-      <div className="bg-white p-4 rounded-md border border-gray-200">
-        <h2 className="text-xl font-semibold text-gray-900 mb-2">MI (Madrasah Ibtidaiyah)</h2>
-        <p className="text-gray-700">Transfer ke Rekening <span className="font-semibold">MI</span></p>
-        <p className="text-gray-700 mb-2">
-          Biaya Formulir: <span className="font-bold text-blue-700">Rp160.000,-</span>
-        </p>
-        <div className="flex items-center justify-between text-sm text-gray-800">
-          <span>No. Rekening: <span className="font-semibold">1752831261</span></span>
-          {!isComplete && (
-            <button
-              type="button"
-              className="ml-2 text-blue-600 hover:text-blue-800"
-              onClick={() => navigator.clipboard.writeText("1752831261")}
-            >
-              Copy
-            </button>
-          )}
-        </div>
+  <div className="space-y-5">
+    {/* --- TPA, KB, TK, PAUD --- */}
+    <div className="bg-white p-4 rounded-md border border-gray-200">
+      <h2 className="text-xl font-semibold text-gray-900 mb-2">TPA, KB, dan TK</h2>
+      <p className="text-gray-700">
+        Transfer ke Rekening <span className="font-semibold">PAUD</span>
+      </p>
+      <p className="text-gray-700 mb-1">
+        Biaya Formulir: <span className="font-bold text-blue-700">Rp160.000,-</span>
+      </p>
+      <p className="text-gray-700 italic mb-2">
+        Khusus untuk siswa <span className="font-semibold">KB Baitun Na’im</span> yang melanjutkan ke <span className="font-semibold">TK Baitun Na’im</span>, biaya formulir sebesar <span className="font-bold text-blue-700">Rp120.000,-</span>
+      </p>
+      <div className="flex items-center justify-between text-sm text-gray-800">
+        <span>
+          No. Rekening: <span className="font-semibold">1752831078</span>
+        </span>
+        {!isComplete && (
+          <button
+            type="button"
+            className="ml-2 text-blue-600 hover:text-blue-800 cursor-pointer"
+            onClick={() => navigator.clipboard.writeText("1752831078")}
+          >
+            Copy
+          </button>
+        )}
       </div>
     </div>
 
-    <p className="mt-6 text-gray-800 leading-relaxed">
-      Setelah melakukan pembayaran, unggah bukti transfer pada kolom yang tersedia.
-      Panitia akan memverifikasi pembayaran, dan setelah itu formulir pendaftaran dapat diakses dan diisi secara online.
-    </p>
+    {/* --- MI --- */}
+    <div className="bg-white p-4 rounded-md border border-gray-200">
+      <h2 className="text-xl font-semibold text-gray-900 mb-2">MI (Madrasah Ibtidaiyah)</h2>
+      <p className="text-gray-700">
+        Transfer ke Rekening <span className="font-semibold">MI</span>
+      </p>
+      <p className="text-gray-700 mb-2">
+        Biaya Formulir: <span className="font-bold text-blue-700">Rp160.000,-</span>
+      </p>
+      <div className="flex items-center justify-between text-sm text-gray-800">
+        <span>
+          No. Rekening: <span className="font-semibold">1752831261</span>
+        </span>
+        {!isComplete && (
+          <button
+            type="button"
+            className="ml-2 text-blue-600 hover:text-blue-800 cursor-pointer"
+            onClick={() => navigator.clipboard.writeText("1752831261")}
+          >
+            Copy
+          </button>
+        )}
+      </div>
+    </div>
   </div>
+
+  <p className="mt-6 text-gray-800 leading-relaxed">
+    Setelah melakukan pembayaran, unggah bukti transfer pada kolom yang tersedia.
+    Panitia akan melakukan verifikasi pembayaran, dan setelah itu formulir pendaftaran dapat diakses dan diisi secara online.
+  </p>
+</div>
+
 
 
     <form

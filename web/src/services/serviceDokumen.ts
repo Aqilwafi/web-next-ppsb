@@ -1,6 +1,5 @@
 export async function uploadMultiDokumen(
   userID: string,
-  siswaID: string,
   FileKK: File,
   FileKTP: File,
   FileFoto: File
@@ -8,11 +7,9 @@ export async function uploadMultiDokumen(
   try {
     const formData = new FormData();
     formData.append("user_id", userID);
-    formData.append("siswa_id", siswaID);
     formData.append("fileA", FileKK);
     formData.append("fileB", FileKTP);
     formData.append("fileC", FileFoto);
-    console.log(userID, siswaID, FileKK, FileKTP, FileFoto);
 
     const res = await fetch("/api/dokumen/upload", {
       method: "POST",
@@ -29,29 +26,22 @@ export async function uploadMultiDokumen(
   }
 }
 
-export async function uploadBukti(
-  userID: string,
-  siswaID: string,
-  Bukti: File
-) {
-  try {
-    const formData = new FormData();
-    formData.append("user_id", userID);
-    formData.append("siswa_id", siswaID);
-    formData.append("file", Bukti);
-    formData.append("jenis", "Bukti");
-    
-    const res = await fetch("/api/dokumen/bukti", {
-      method: "POST",
-      body: formData,
-    });
+export async function uploadBukti(userID: string, file: File) {
+  const formData = new FormData();
+  formData.append("user_id", userID);
+  formData.append("file", file);
+  formData.append("jenis", "Bukti");
 
-    const data = await res.json();
-    if (!res.ok || !data.success) throw new Error(data.message || "Upload gagal");
+  const res = await fetch("/api/dokumen/bukti", {
+    method: "POST",
+    body: formData,
+  });
 
-    return data.results; // array { jenis, url, path }
-  } catch (err) {
-    console.error("Service uploadMultiDokumen error:", err);
-    throw err;
+  const data = await res.json();
+
+  if (!res.ok || !data.success) {
+    throw new Error(data.message || "Upload gagal");
   }
+
+  return data.data; // { user_id, tipe_file, url }
 }

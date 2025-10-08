@@ -7,8 +7,6 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData();
 
     const userId = formData.get("user_id") as string | null;
-    const siswaIdStr = formData.get("siswa_id") as string | null;
-    const siswaId = siswaIdStr ? Number(siswaIdStr) : null;
 
     if (!userId) {
       return NextResponse.json(
@@ -16,14 +14,6 @@ export async function POST(req: NextRequest) {
         { status: 400 }
       );
     }
-
-    if (!siswaId) {
-      return NextResponse.json(
-        { success: false, message: "SiswaId wajib ada" },
-        { status: 400 }
-      );
-    }
-
     // Sesuaikan key frontend
     const filePairs = [
       { file: formData.get("fileA") as File, jenis: "kk" },
@@ -53,7 +43,7 @@ export async function POST(req: NextRequest) {
 
       // Insert ke tabel dokumen
       const { error: dbErr } = await supabase.from("dokumen").insert({
-        siswa_id: siswaId,
+        user_id: userId,
         nama_file: file.name,
         tipe_file: jenis,
         url: urlData.publicUrl,
