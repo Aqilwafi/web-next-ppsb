@@ -29,7 +29,14 @@ const defaultData: DashboardStats = {
   totalRejectedReg: 0,
 };
 
-export function useAdminDashboard(adminRole: string) {
+type cardProps = {
+  admin?: {
+    username: string;
+    role?: string;
+  };
+};
+
+export function useAdminDashboard({admin}: cardProps) {
   const [data, setData] = useState<DashboardStats>(defaultData);
   const [loading, setLoading] = useState(true);
 
@@ -64,8 +71,8 @@ export function useAdminDashboard(adminRole: string) {
   );
 
   const cardsToRender = useMemo(
-    () => allCards.filter((card) => !card.superOnly || adminRole === "Super"),
-    [allCards, adminRole]
+    () => allCards.filter((card) => !card.superOnly || admin?.role === "Super"),
+    [allCards, admin?.role]
   );
 
   return { data, setData, cardsToRender };
