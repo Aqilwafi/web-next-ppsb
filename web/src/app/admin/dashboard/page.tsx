@@ -12,7 +12,7 @@ export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useSidebar();
   const { admin } = useAdminAuth();
 
-  const { cardsToRender } = useAdminDashboard(admin);
+  const { cardsToRender } = useAdminDashboard(admin.role);
 
   return (
     <div className="flex min-h-screen transition-colour">
