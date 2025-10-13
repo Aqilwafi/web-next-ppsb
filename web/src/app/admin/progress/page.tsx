@@ -16,7 +16,6 @@ export default function ProgressPage() {
   return (
     <div className="flex min-h-screen transition-colour">
       <Sidebar
-        admin={admin}
         isOpen={sidebarOpen}
         toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         active="/admin/progress"

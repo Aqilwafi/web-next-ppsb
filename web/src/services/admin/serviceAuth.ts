@@ -44,7 +44,7 @@ export async function getCurrentAdmin(): Promise<Admin | null> {
 
     if (!res.ok) return null;
     const data = await res.json();
-    return data.admin as Admin;
+    return data.user as Admin;
   } catch {
     return null;
   }

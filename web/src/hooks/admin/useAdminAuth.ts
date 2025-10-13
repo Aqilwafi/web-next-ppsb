@@ -41,7 +41,7 @@ export function useAdminAuth() {
   return () => {
     isMounted = false;
   };
-}, []);
+}, [router]);
 
 
   const login = async (identifier: string, password: string) => {
@@ -50,12 +50,14 @@ export function useAdminAuth() {
     try {
       const response = await loginAdmin(identifier, password);
       if (!response.success || !response.admin) throw new Error(response.message || "Login gagal");
+      console.log("Response admin:", response.admin);
       setAdmin(response.admin);
       router.push("/admin/dashboard");
     } catch (err: unknown) {
       if (err instanceof Error) setError(err.message);
       else setError("Login gagal");
     } finally {
+      console.log(admin);
       setLoadingLogin(false);
     }
   };

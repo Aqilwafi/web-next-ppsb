@@ -15,7 +15,6 @@ export default function PembayaranPage() {
   return (
     <div className="flex min-h-screen transition-colour">
       <Sidebar
-        admin={admin}
         isOpen={sidebarOpen}
         toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
         active="/admin/pembayaran"

@@ -1,11 +1,19 @@
-// app/admin/page.tsx
-
 "use client";
+import { useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { useAdminAuth } from "@/hooks/admin/useAdminAuth";
 import AdminLandingPage from "@/components/admin/AdminLandingPage";
 
 export default function AdminPage() {
   const { admin, loading, logout, loadingLogout } = useAdminAuth();
+  const router = useRouter();
+
+  // Handle redirect jika admin tidak ada
+  useEffect(() => {
+    if (!loading && !admin) {
+      router.push("/admin/login");
+    }
+  }, [admin, loading, router]);
 
   if (loading)
     return (
@@ -14,6 +22,7 @@ export default function AdminPage() {
       </div>
     );
 
+  // Kalau admin belum tersedia, return null supaya tidak render landing page dulu
   if (!admin) return null;
 
   return <AdminLandingPage logout={logout} loadingLogout={loadingLogout} />;

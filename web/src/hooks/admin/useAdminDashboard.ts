@@ -29,14 +29,8 @@ const defaultData: DashboardStats = {
   totalRejectedReg: 0,
 };
 
-type cardProps = {
-  admin?: {
-    username: string;
-    role?: string;
-  };
-};
 
-export function useAdminDashboard({admin}: cardProps) {
+export function useAdminDashboard(admin?: { username: string; role?: string }) {
   const [data, setData] = useState<DashboardStats>(defaultData);
   const [loading, setLoading] = useState(true);
 

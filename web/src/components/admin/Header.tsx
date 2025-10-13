@@ -4,8 +4,9 @@ import React from "react";
 import { LogOut } from "lucide-react";
 import { useAdminAuth } from "@/hooks/admin/useAdminAuth";
 
-export default function AdminHeader({ adminName }: { adminName: { username?: string } }) {
-  const { logout, loadingLogout } = useAdminAuth();
+export default function AdminHeader() {
+  const { admin, logout, loadingLogout } = useAdminAuth();
+  const adminName = admin?.username ?? "Admin";
 
   const handleLogout = async () => {
     try {
@@ -19,7 +20,7 @@ export default function AdminHeader({ adminName }: { adminName: { username?: str
     <header className="bg-blue-500 flex items-center justify-between p-5 max-w-full">
       <div className="flex items-center gap-3">
         <h2 className="font-semibold text-white text-lg">
-          Halo, <span className="text-white">{adminName?.username}</span> 👋
+          Halo, <span className="text-white">{adminName}</span> 👋
         </h2>
       </div>
 
@@ -40,4 +41,3 @@ export default function AdminHeader({ adminName }: { adminName: { username?: str
     </header>
   );
 }
-
