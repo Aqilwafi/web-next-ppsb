@@ -17,7 +17,7 @@ export default function KeputusanPage() {
       <Sidebar
              isOpen={sidebarOpen}
              toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-             active="/admin/dashboard"
+             active="/admin/keputusan"
            />
 
       <main className="flex flex-col w-full bg-gray-100">

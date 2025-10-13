@@ -7,6 +7,7 @@ import { Users, Wallet, DollarSign, ArrowLeft, ClipboardList, FileX,FileClock, F
 import MaintenancePage from "../../../components/admin/maintanance";
 import { useAdminAuth } from "@/hooks/admin/useAdminAuth";
 import { useSidebar } from "@/hooks/admin/useSidebar";
+import AdminDocumentTable from "@/components/admin/AdminDokumen"
 
 export default function DokumenPage() {
   const [sidebarOpen, setSidebarOpen] = useSidebar();
