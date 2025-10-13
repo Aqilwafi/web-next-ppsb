@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
       { success: true, message: "Login berhasil", user: { id: user.id, email: user.email, username: user.username } },
       { status: 200 }
     );
-    res.cookies.set("token", token, {
+    res.cookies.set("siswa_token", token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",

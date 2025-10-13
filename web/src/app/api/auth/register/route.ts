@@ -26,12 +26,13 @@ export async function POST(req: NextRequest) {
     const { data: existingUser, error: checkError } = await supabase
       .from("users")
       .select("id")
-      .or(`email.eq.${email},username.eq.${username}`)
+      .eq("username", username)
       .maybeSingle();
+
 
     if (checkError) throw checkError;
     if (existingUser) {
-      return NextResponse.json({ success: false, message: "Email atau username sudah terdaftar" });
+      return NextResponse.json({ success: false, message: " username sudah terdaftar, silahkan pilih username lain" });
     }
 
     // 🔹 hash password

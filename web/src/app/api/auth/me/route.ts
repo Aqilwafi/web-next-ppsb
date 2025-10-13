@@ -3,7 +3,7 @@ import { verifyToken } from "@/lib/jwt";
 
 export async function GET() {
   const cookieStore = await cookies();
-  const token = cookieStore.get("token")?.value;
+  const token = cookieStore.get("siswa_token")?.value;
   const user = token ? verifyToken(token) : null;
 
   if (!user) {

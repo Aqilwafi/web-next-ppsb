@@ -1,14 +1,32 @@
 import { NextRequest, NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
+import { verifyToken } from "@/lib/jwt";
 
 export async function POST(req: NextRequest) {
   try {
     const supabase = supabaseAdmin;
     const formData = await req.formData();
 
-    const userId = formData.get("user_id") as string | null;
+    const userID = formData.get("user_id") as string | null;
     const jenis = (formData.get("jenis") as string | null)?.toLowerCase(); // contoh: "kk" atau "ijazah"
     const file = formData.get("file") as File | null;
+
+    const token = req.cookies.get("siswa_token")?.value;
+        if (!token)
+        return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
+    
+    const decoded = verifyToken(token);
+      if (!decoded || typeof decoded !== "object" || !("id" in decoded))
+      return NextResponse.json({ success: false, message: "Invalid token" }, { status: 401 });
+    
+    const userIdFromToken = decoded.id as string;
+    
+        // 🔹 Validasi userID dari body jika ada
+    if (userID && userID !== userIdFromToken) {
+      return NextResponse.json({ success: false, message: "User ID mismatch" }, { status: 403 });
+    }
+
+    const userId = userIdFromToken;
 
     if (!userId) {
       return NextResponse.json(

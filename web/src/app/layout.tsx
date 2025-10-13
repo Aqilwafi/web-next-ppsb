@@ -28,8 +28,6 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {/* Bungkus semua children dengan Providers */}
         {children}
-          
-        
       </body>
     </html>
   );

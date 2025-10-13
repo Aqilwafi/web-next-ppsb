@@ -1,15 +1,15 @@
 "use client";
 
-import { useDashboard } from "@/hooks/useDashboard";
 import { useKonten } from "@/hooks/useKonten";
 import Image from "next/image";
 import { AnimatePresence, motion } from "framer-motion";
 import DashboardHeader from "@/components/headers/dashboardHeader";
 import DashboardStep from "@/components/dashboards/stepDashboard";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAuth";
 
 export default function DashboardPage() {
-  const { user, loading, handleLogout } = useDashboard();
+  const { user, loading, logout } = useAuth();
 
   // ✅ gunakan fallback string jika user belum ada
   const {
@@ -28,7 +28,7 @@ export default function DashboardPage() {
   // Render loading state
   if (loading || !user) return <div>Loading...</div>;
 
-  const nama = user.un || "User";
+  const nama = user.username || "User";
 
   const handleComplete = async (stepId: number) => {
     setLoadingStep(stepId);
@@ -48,7 +48,7 @@ export default function DashboardPage() {
       <div className="sticky top-0 z-50 bg-white shadow-md">
         <DashboardHeader
           name={nama}
-          handleLogout={handleLogout}
+          handleLogout={logout}
           loadingLogout={false}
         />
       </div>

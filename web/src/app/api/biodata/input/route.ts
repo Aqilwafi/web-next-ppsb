@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const supabase = await supabaseServer();
 
     // 🔹 Ambil userId dari cookie JWT
-    const token = req.cookies.get("token")?.value;
+    const token = req.cookies.get("siswa_token")?.value;
     if (!token)
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
 

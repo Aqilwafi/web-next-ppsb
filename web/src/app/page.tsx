@@ -34,8 +34,6 @@ export default function HomePage() {
                         LOGIN
                       </button>
                     </Link>
-                    
-
                 </div>
             </div>
       </main>

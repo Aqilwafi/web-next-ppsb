@@ -7,7 +7,7 @@ export async function GET(req: NextRequest) {
     const supabase = await supabaseServer();
 
     // 🔹 Validasi JWT dari cookie
-    const token = req.cookies.get("token")?.value;
+    const token = req.cookies.get("siswa_token")?.value;
     if (!token) {
       return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 });
     }

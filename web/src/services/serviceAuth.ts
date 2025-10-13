@@ -52,11 +52,23 @@ export async function getCurrentUser() {
     credentials: "include",
   });
 
-  const data = await res.json();
-
-  if (!res.ok || !data.success) {
-    return null;
+  // Bisa saja API kirim plain text 'Unauthorized'
+  try {
+    const data = await res.json();
+    if (!res.ok || !data.user) {
+      return null;
+    }
+    return data.user as { id: number; email: string; username: string };
+  } catch {
+    return null; // JSON parse gagal, berarti unauthorized juga
   }
-
-  return data.user as { id: number; email: string; username: string };
 }
+
+export async function logoutUser() {
+  const res = await fetch("/api/auth/logout", {
+    method: "POST",
+    credentials: "include",
+  });
+  return await res.json();
+}
+

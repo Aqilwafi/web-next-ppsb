@@ -37,7 +37,7 @@
     "../sampah/stepComponen.tsx",
     "../sampah/biodataAfter.tsx",
     "src/components/steps/pecahan/new.tsx"
-  ],
+, "../simpenadmin/layout.tsx"  ],
   "exclude": [
     "node_modules"
   ]
