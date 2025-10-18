@@ -9,7 +9,7 @@ export default function AdminPage() {
   const router = useRouter();
 
   useEffect(() => {
-    if (!loading && !admin) router.replace("/admin/login");
+    if (!loading && !admin) router.replace("/admin-login");
   }, [admin, loading, router]);
 
   if (loading)
