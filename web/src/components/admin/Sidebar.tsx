@@ -7,7 +7,9 @@ import {
   Wallet,
   Files,
   ClipboardList,
+  Activity,
   Menu,
+  UserCheck
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAdminAuth } from "@/hooks/admin/useAdminAuth";
@@ -28,7 +30,8 @@ export default function Sidebar({
 
   const menuItems = [
     { name: "Dashboard", icon: <LayoutDashboard size={18} />, path: "/admin/dashboard" },
-    { name: "Users Progress", icon: <Users size={18} />, path: "/admin/progress" },
+    { name: "Users Progress", icon: <Activity size={18} />, path: "/admin/progress" },
+    { name: "Biodata Lengkap", icon: <UserCheck size={18} />, path: "/admin/biodata" },
     { name: "Pembayaran", icon: <Wallet size={18} />, path: "/admin/pembayaran" },
     { name: "Dokumen", icon: <Files size={18} />, path: "/admin/dokumen" },
     { name: "Keputusan", icon: <ClipboardList size={18} />, path: "/admin/keputusan" },

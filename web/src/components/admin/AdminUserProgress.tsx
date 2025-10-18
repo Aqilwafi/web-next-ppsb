@@ -24,52 +24,14 @@ function CardContent({ children }: any) {
   return <div className="text-gray-600 text-sm">{children}</div>;
 }
 
-// 📊 Dummy data siswa + progress + biodata singkat
-const dummyUsers = [
-  {
-    id: 1,
-    name: "Ahmad Fauzan",
-    lembaga: "MI",
-    tingkatan: "MI",
-    email: "ahmadfauzan@example.com",
-    currentStep: 5,
-  },
-  {
-    id: 2,
-    name: "Siti Rahma",
-    lembaga: "TK",
-    tingkatan: "TK",
-    email: "sitirahma@example.com",
-    currentStep: 2,
-  },
-  {
-    id: 3,
-    name: "Rizky Hidayat",
-    lembaga: "KB",
-    tingkatan: "KB",
-    email: "rizkyhidayat@example.com",
-    currentStep: 6,
-  },
-  {
-    id: 4,
-    name: "Lina Maulani",
-    lembaga: "TPA",
-    tingkatan: "TPA",
-    email: "lina@example.com",
-    currentStep: 3,
-  },
-];
-
 export default function UserProgressPage() {
-  const [users, setUsers] = useState<any[]>([]);
+
   const { data, loading, error } = useUserProgress();
   const [search, setSearch] = useState("");
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [filterLembaga, setFilterLembaga] = useState<string>("All");
 
-  useEffect(() => {
-    setUsers(dummyUsers);
-  }, []);
+ 
 
   // Filter + search
   const filtered = data.filter((u) => {
@@ -93,7 +55,7 @@ export default function UserProgressPage() {
   <div className="sticky top-0 bg-gray-50 z-10 pb-3 flex flex-col sm:flex-row sm:items-center sm:gap-4">
     <input
       type="text"
-      placeholder="Cari nama atau lembaga..."
+      placeholder="Cari nama..."
       value={search}
       onChange={(e) => setSearch(e.target.value)}
       className="w-full sm:w-72 px-4 py-2 border rounded-lg text-sm 

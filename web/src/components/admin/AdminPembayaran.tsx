@@ -100,29 +100,29 @@ const filteredUsers = users.filter((u: any) => {
     <h1 className="text-2xl font-semibold mb-4 text-gray-800">
       Daftar Pembayaran Siswa
     </h1>
-{/* 🔍 Search Bar + Filter Sticky */}
-<div className="sticky top-0 z-20 bg-gray-50 pb-4 flex flex-col sm:flex-row sm:items-center sm:gap-4">
-  {/* Search Input */}
-  <input
-    type="text"
-    placeholder="Cari nama atau lembaga..."
-    value={search}
-    onChange={(e) => setSearch(e.target.value)}
-    className="w-full sm:w-72 px-4 py-2 border rounded-lg text-sm 
-               focus:outline-none focus:ring-2 focus:ring-green-500"
-  />
+    {/* 🔍 Search Bar + Filter Sticky */}
+    <div className="sticky top-0 z-20 bg-gray-50 pb-4 flex flex-col sm:flex-row sm:items-center sm:gap-4">
+      {/* Search Input */}
+      <input
+        type="text"
+        placeholder="Cari nama atau lembaga..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        className="w-full sm:w-72 px-4 py-2 border rounded-lg text-sm 
+                  focus:outline-none focus:ring-2 focus:ring-green-500"
+      />
 
-  {/* Filter Status */}
-  <select
-    value={filterStatus}
-    onChange={(e) => setFilterStatus(e.target.value)}
-    className="mt-2 sm:mt-0 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
-  >
-    <option value="All">Semua Status</option>
-    <option value="Lunas">Lunas</option>
-    <option value="Belum Lunas">Belum Lunas</option>
-  </select>
-</div>
+      {/* Filter Status */}
+      <select
+        value={filterStatus}
+        onChange={(e) => setFilterStatus(e.target.value)}
+        className="mt-2 sm:mt-0 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+      >
+        <option value="All">Semua Status</option>
+        <option value="Lunas">Lunas</option>
+        <option value="Belum Lunas">Belum Lunas</option>
+      </select>
+    </div>
 
     {/* 🧱 Scrollable Card Section */}
     <div className="mt-4 max-h-[75vh] overflow-y-auto pr-2">

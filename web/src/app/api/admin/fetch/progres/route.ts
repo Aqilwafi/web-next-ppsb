@@ -34,7 +34,7 @@ export async function GET() {
 
     return {
         id: p.users?.id,
-        nama_lengkap: p.biodata_siswa?.[0]?.nama_lengkap ?? p.users?.username ?? "-",
+        nama_lengkap: p.biodata_siswa?.nama_lengkap ?? "-",
         email: p.users?.email ?? "-",
         lembaga: p.lembaga ?? "-",
         tingkatan: p.tingkatan ?? "-",
