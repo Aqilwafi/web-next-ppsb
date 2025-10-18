@@ -64,13 +64,20 @@ export default function UserCardsPage() {
   const { data: users = [], loading, error } = usePembayaran();
   const [selectedUser, setSelectedUser] = useState<any | null>(null);
   const [search, setSearch] = useState("");
+const [filterStatus, setFilterStatus] = useState<"All" | "Lunas" | "Belum Lunas">("All");
 
-  const filteredUsers = users.filter((u: any) =>
-    [u.nama_lengkap, u.lembaga]
-      .join(" ")
-      .toLowerCase()
-      .includes(search.toLowerCase())
-  );
+const filteredUsers = users.filter((u: any) => {
+  const matchesSearch = [u.nama_lengkap, u.lembaga]
+    .join(" ")
+    .toLowerCase()
+    .includes(search.toLowerCase());
+
+  const matchesStatus =
+    filterStatus === "All" || u.status === filterStatus;
+
+  return matchesSearch && matchesStatus;
+});
+
 
   if (loading) {
     return (
@@ -93,18 +100,29 @@ export default function UserCardsPage() {
     <h1 className="text-2xl font-semibold mb-4 text-gray-800">
       Daftar Pembayaran Siswa
     </h1>
+{/* 🔍 Search Bar + Filter Sticky */}
+<div className="sticky top-0 z-20 bg-gray-50 pb-4 flex flex-col sm:flex-row sm:items-center sm:gap-4">
+  {/* Search Input */}
+  <input
+    type="text"
+    placeholder="Cari nama atau lembaga..."
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+    className="w-full sm:w-72 px-4 py-2 border rounded-lg text-sm 
+               focus:outline-none focus:ring-2 focus:ring-green-500"
+  />
 
-    {/* 🔍 Search Bar Sticky */}
-    <div className="sticky top-0 z-20 bg-gray-50 pb-4">
-      <input
-        type="text"
-        placeholder="Cari nama atau lembaga..."
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-        className="w-full sm:w-96 px-4 py-2 border rounded-lg text-sm 
-                   focus:outline-none focus:ring-2 focus:ring-green-500"
-      />
-    </div>
+  {/* Filter Status */}
+  <select
+    value={filterStatus}
+    onChange={(e) => setFilterStatus(e.target.value)}
+    className="mt-2 sm:mt-0 px-3 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+  >
+    <option value="All">Semua Status</option>
+    <option value="Lunas">Lunas</option>
+    <option value="Belum Lunas">Belum Lunas</option>
+  </select>
+</div>
 
     {/* 🧱 Scrollable Card Section */}
     <div className="mt-4 max-h-[75vh] overflow-y-auto pr-2">

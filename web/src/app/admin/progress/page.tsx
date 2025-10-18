@@ -7,6 +7,7 @@ import { Users, Wallet, DollarSign, ArrowLeft, ClipboardList, FileX,FileClock, F
 import MaintenancePage from "../../../components/admin/maintanance";
 import { useAdminAuth } from "@/hooks/admin/useAdminAuth";
 import { useSidebar } from "@/hooks/admin/useSidebar";
+import UserProgressPage from "@/components/admin/AdminUserProgress"; 
 
 export default function ProgressPage() {
   const [sidebarOpen, setSidebarOpen] = useSidebar();
@@ -25,11 +26,7 @@ export default function ProgressPage() {
         <Header adminName={admin} />
 
         <div className="flex-1 p-6 w-full">
-          <h2 className="text-2xl text-black font-bold mb-6">Dashboard Progress</h2>
-
-          <div className="flex flex-col items-center justify-center h-screen bg-gray-50 text-gray-800">
-                <MaintenancePage/>
-          </div>
+           <UserProgressPage/>
         </div>
       </main>
     </div>
