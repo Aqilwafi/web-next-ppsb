@@ -1,7 +1,14 @@
 "use client";
 
 import React from "react";
-import { LayoutDashboard, Users, Wallet, Files, ClipboardList, Menu } from "lucide-react";
+import {
+  LayoutDashboard,
+  Users,
+  Wallet,
+  Files,
+  ClipboardList,
+  Menu,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAdminAuth } from "@/hooks/admin/useAdminAuth";
 
@@ -11,7 +18,11 @@ type SidebarProps = {
   active?: string;
 };
 
-export default function Sidebar({ isOpen, toggleSidebar, active }: SidebarProps) {
+export default function Sidebar({
+  isOpen,
+  toggleSidebar,
+  active,
+}: SidebarProps) {
   const router = useRouter();
   const { admin } = useAdminAuth();
 
@@ -25,7 +36,9 @@ export default function Sidebar({ isOpen, toggleSidebar, active }: SidebarProps)
 
   return (
     <aside
-      className={`bg-blue-500 border-r transition-all duration-300 flex flex-col ${isOpen ? "w-64" : "w-16"}`}
+      className={`bg-blue-500 border-r transition-all duration-300 flex flex-col
+                  ${isOpen ? "w-64" : "w-16"}
+                  sticky top-0 h-screen`}
     >
       {/* Header Sidebar */}
       <div className="flex items-center justify p-4">
@@ -43,15 +56,16 @@ export default function Sidebar({ isOpen, toggleSidebar, active }: SidebarProps)
       </div>
 
       {/* Menu */}
-      <nav className="mt-4 flex-1 p-3 px-4 gap-4 py-6">
+      <nav className="mt-4 flex-1 p-3 px-4 gap-4 py-6 overflow-y-auto">
         {menuItems.map((item) => (
           <div
             key={item.name}
             onClick={() => router.push(item.path)}
             className={`group flex items-center gap-4 p-2 py-6 cursor-pointer transition-all rounded
-              ${active === item.path
-                ? "bg-white text-blue-700 font-semibold"
-                : "text-white hover:bg-white hover:text-blue-500"
+              ${
+                active === item.path
+                  ? "bg-white text-blue-700 font-semibold"
+                  : "text-white hover:bg-white hover:text-blue-500"
               }`}
           >
             <div className="text-lg transition-colors duration-200 group-hover:text-blue-500">

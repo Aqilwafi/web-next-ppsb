@@ -15,9 +15,10 @@ export default function AdminHeader() {
       console.error("Logout gagal:", err);
     }
   };
+  
 
   return (
-    <header className="bg-blue-500 flex items-center justify-between p-5 max-w-full">
+    <header className="bg-blue-500 flex items-center justify-between p-5 max-w-full sticky top-0 z-40">
       <div className="flex items-center gap-3">
         <h2 className="font-semibold text-white text-lg">
           Halo, <span className="text-white">{adminName}</span> 👋

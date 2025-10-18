@@ -1,12 +1,12 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Sidebar from "../../../components/admin/Sidebar";
 import Header from "../../../components/admin/Header";
-import { Users, Wallet, DollarSign, ArrowLeft, ClipboardList, FileX,FileClock, FileCheck, FileSignature, Clock, XCircle, CheckCircle, CreditCard } from "lucide-react";
 import MaintenancePage from "../../../components/admin/maintanance";
 import { useAdminAuth } from "@/hooks/admin/useAdminAuth";
 import { useSidebar } from "@/hooks/admin/useSidebar";
+import UserCardsPage from "@/components/admin/AdminPembayaran";
 
 export default function PembayaranPage() {
   const [sidebarOpen, setSidebarOpen] = useSidebar();
@@ -24,11 +24,7 @@ export default function PembayaranPage() {
         <Header adminName={admin} />
 
         <div className="flex-1 p-6 w-full">
-          <h2 className="text-2xl text-black font-bold mb-6">Dashboard Pembayaran</h2>
-
-          <div className="flex flex-col items-center justify-center h-screen bg-gray-50 text-gray-800">
-                <MaintenancePage/>
-          </div>
+          <UserCardsPage/>
         </div>
       </main>
     </div>
