@@ -15,12 +15,9 @@ export default function BiodataStep({
   const { handleMarkStep } = useKonten(user);
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 50 }, (_, i) => currentYear + 1 - i);
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState(!isComplete);
   const [statusRumah, setStatusRumah] = useState();
   const [tinggalBersama, setTinggalBersama] = useState();
-  //console.log(dataE);
-  //console.log(dataD);
-  //console.log(dataB);
 
   const handleClick = async () => {
     try {
@@ -29,8 +26,7 @@ export default function BiodataStep({
         return;
       }
       await inputData(dataB, dataC, dataD, dataE, dataF);
-      //console.log(dataA, dataB, dataC, dataD, dataE, dataF);
-      //await mutate();
+      
       if (!isComplete) onComplete();
     } catch (err : unknown) {
       if (err instanceof Error) {
