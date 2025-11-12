@@ -24,12 +24,12 @@ export default function HomePage() {
                     </h1>
                 </div>
                 <div className="flex flex-col gap-4 w-full max-w-md">
-                    <Link href="/register">
+                    <Link href="/maintanance">
                         <button className="w-full px-6 py-3 rounded-2xl bg-blue-500 text-white text-lg shadow hover:bg-blue-700 transition cursor-pointer">
                         DAFTAR SISWA BARU
                       </button>
                     </Link>
-                    <Link href="/login">
+                    <Link href="/maintanance">
                       <button className="w-full px-6 py-3 rounded-2xl bg-gray-200 text-gray-800 text-lg shadow hover:bg-gray-300 transition cursor-pointer">
                         LOGIN
                       </button>
