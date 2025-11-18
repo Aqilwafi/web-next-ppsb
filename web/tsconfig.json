@@ -37,7 +37,7 @@
     "../sampah/stepComponen.tsx",
     "../sampah/biodataAfter.tsx",
     "src/components/steps/pecahan/new.tsx"
-, "../simpenadmin/layout.tsx"  ],
+, "../simpenadmin/layout.tsx", "../database/pembayaran/servicePembayaran.ts", "../database/pembayaran/useAdminPembayaran.ts", "../database/pembayaran/AdminPembayaran.tsx", "../database/useAdminDocument.ts", "../database/forgot-password/route.ts", "../database/reset-password/route.ts"  ],
   "exclude": [
     "node_modules"
   ]

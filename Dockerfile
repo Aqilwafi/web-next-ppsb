@@ -1,18 +1,42 @@
-FROM node:22-alpine
+# -----------------------------
+# 1) Builder Stage
+# -----------------------------
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copy package.json dan package-lock.json
+# Copy package files
 COPY web/package*.json ./
 
-# Install dependencies
+# Install dependencies (all, including devDependencies)
 RUN npm install
 
-# Copy semua source code
+# Copy project source
 COPY web/ ./
 
-# Expose port aplikasi
+# Build Next.js
+RUN npm run build
+
+
+# -----------------------------
+# 2) Runner Stage (Production)
+# -----------------------------
+FROM node:22-alpine AS runner
+
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+# Only copy node_modules from builder
+COPY --from=builder /app/node_modules ./node_modules
+
+# Copy necessary build outputs
+COPY --from=builder /app/.next ./.next
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/package*.json ./
+
+# Expose port
 EXPOSE 3000
 
-# Jalankan aplikasi
-CMD ["npm", "run", "dev"]
+# Run production mode
+CMD ["npm", "start"]
