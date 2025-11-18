@@ -12,6 +12,9 @@ export default function AdminDashboard() {
   const [sidebarOpen, setSidebarOpen] = useSidebar();
   const { admin } = useAdminAuth();
 
+  // Jangan render hook jika admin belum ada
+  if (!admin) return null;
+
   const { cardsToRender } = useAdminDashboard(admin);
 
   return (
@@ -28,7 +31,6 @@ export default function AdminDashboard() {
         <div className="flex-1 p-6 w-full">
           <h2 className="text-2xl text-black font-bold mb-6">Dashboard Utama</h2>
 
-          {/* Cards */}
           <div className="flex flex-wrap gap-5 justify-left">
             {cardsToRender.map((card, idx) => (
               <div
@@ -38,16 +40,15 @@ export default function AdminDashboard() {
                 <h3 className="text-gray-600 text-lg font-medium mb-2 text-center">
                   {card.title}
                 </h3>
+
                 <div className="flex items-center justify-center gap-2 mt-4">
                   <strong className="text-xl text-gray-900">{card.value}</strong>
-                  <card.icon className={card.className} /> {/* ✅ fix di sini */}
+                  <card.icon className={card.className} />
                 </div>
               </div>
             ))}
           </div>
 
-
-          {/* Recent Activity */}
           <div className="mt-6 bg-white shadow rounded-lg p-4 opacity-50">
             <h3 className="font-semibold mb-2 text-black">Aktivitas Terbaru</h3>
             <div className="w-[60%]">

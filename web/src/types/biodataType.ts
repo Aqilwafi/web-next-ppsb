@@ -85,8 +85,8 @@ export type BiodataSiswaForm = {
   agama: string;
   hobi: string;
   cita_cita: string;
-  jumlah_saudara: string;
-  anak_ke: string;
+  jumlah_saudara: number | null;
+  anak_ke: number | null;
   golongan_darah: string;
   penyakit: string;
 };

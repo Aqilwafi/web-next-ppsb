@@ -9,7 +9,7 @@ export default async  function AdminLayout({ children }: { children: React.React
   if (!token) redirect("/admin-login");
 
   const user = verifyToken(token);
-  if (!user || user.role !== "viewer" | "validator" | "superadmin" ) redirect("/admin-login");
+  if (!user ) redirect("/admin-login");
 
   return (
     <section className="min-h-screen bg-gray-50 text-gray-800">

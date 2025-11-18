@@ -34,14 +34,3 @@ export async function fetchBioSiswa() {
   return data.data;
 }
 
-export async function fetchBioProfile() {
-  const res = await fetch("/api/biodata/profile");
-   console.log(`res: ${res}`);
-  const data = await res.json();
-   console.log(`data: ${data}`);
-    console.log(`data: ${data.success}`);
-  if (!data.success) throw new Error(data.message);
-  const id = data.data?.id
-  console.log(`id: ${id}`);
-  return id ?? null;
-}

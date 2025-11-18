@@ -23,7 +23,7 @@ export default function ProgressPage() {
       />
 
       <main className="flex flex-col w-full bg-gray-100">
-        <Header adminName={admin} />
+        <Header  />
 
         <div className="flex-1 p-6 w-full">
            <UserProgressPage/>

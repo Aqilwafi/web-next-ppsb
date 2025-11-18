@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
     const { data: siswaData, error: siswaErr } = await supabase
       .from("biodata_siswa")
       .select("*")
-      .eq("profile_id", userId)
+      .eq("id", userId)
       .maybeSingle();
 
     if (siswaErr) throw siswaErr;
@@ -65,7 +65,7 @@ export async function GET(req: NextRequest) {
     const { data: ortuData, error: ortuErr } = await supabase
       .from("biodata_ortu")
       .select("*")
-      .eq("siswa_id", siswaData.id)
+      .eq("id_siswa", siswaData.id)
       .maybeSingle();
 
     if (ortuErr) throw ortuErr;
@@ -74,7 +74,7 @@ export async function GET(req: NextRequest) {
     const { data: tempatData, error: tempatErr } = await supabase
       .from("tempat_tinggal")
       .select("*")
-      .eq("siswa_id", siswaData.id)
+      .eq("id_siswa", siswaData.id)
       .maybeSingle();
 
     if (tempatErr) throw tempatErr;
@@ -83,7 +83,7 @@ export async function GET(req: NextRequest) {
     const { data: waliData, error: waliErr } = await supabase
       .from("biodata_wali")
       .select("*")
-      .eq("siswa_id", siswaData.id)
+      .eq("id_siswa", siswaData.id)
       .maybeSingle();
 
     // Supabase `maybeSingle` akan return `null` kalau tidak ada data,

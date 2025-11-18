@@ -30,7 +30,7 @@ const defaultData: DashboardStats = {
 };
 
 
-export function useAdminDashboard(admin?: { username: string; role?: string }) {
+export function useAdminDashboard(admin?: { username: string; role?: string }| null) {
   const [data, setData] = useState<DashboardStats>(defaultData);
   const [loading, setLoading] = useState(true);
 

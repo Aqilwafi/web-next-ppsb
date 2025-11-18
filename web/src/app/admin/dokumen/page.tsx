@@ -7,7 +7,7 @@ import { Users, Wallet, DollarSign, ArrowLeft, ClipboardList, FileX,FileClock, F
 import MaintenancePage from "../../../components/admin/maintanance";
 import { useAdminAuth } from "@/hooks/admin/useAdminAuth";
 import { useSidebar } from "@/hooks/admin/useSidebar";
-import AdminDocumentTable from "@/components/admin/AdminDokumen"
+
 
 export default function DokumenPage() {
   const [sidebarOpen, setSidebarOpen] = useSidebar();
@@ -22,7 +22,7 @@ export default function DokumenPage() {
       />
 
       <main className="flex flex-col w-full bg-gray-100">
-        <Header adminName={admin} />
+        <Header  />
 
         <div className="flex-1 p-6 w-full">
           <h2 className="text-2xl text-black font-bold mb-6">Dashboard Dokumen</h2>

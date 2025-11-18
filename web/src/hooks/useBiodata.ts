@@ -17,7 +17,7 @@ export function useBiodata(userId: string) {
           lembaga: "",
           tingkatan: "",
           asal_sekolah: "",
-          tahun_lulus: null,
+          tahun_lulus: "",
           alamat_pendidikan_sebelumnya: "",
           npsn: "",
           created_at: "",

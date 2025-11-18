@@ -37,7 +37,7 @@ export async function POST(req: NextRequest) {
     const { id, ...siswaData } = siswa;
     const { data: siswaUpsert, error: siswaErr } = await supabase
       .from("biodata_siswa")
-      .upsert([{ profile_id: userId, ...siswaData }], { onConflict: "profile_id" })
+      .upsert([{ id: userId, ...siswaData }], { onConflict: "id" })
       .select()
       .single();
     if (siswaErr) throw siswaErr;
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
     const { id: ido, ...ortuData } = ortu;
     const { data: ortuUpsert, error: ortuErr } = await supabase
       .from("biodata_ortu")
-      .upsert([{ siswa_id: siswaId, ...ortuData }], { onConflict: "siswa_id" })
+      .upsert([{ id_siswa: siswaId, ...ortuData }], { onConflict: "id_siswa" })
       .select()
       .single();
     if (ortuErr) throw ortuErr;
@@ -59,7 +59,7 @@ export async function POST(req: NextRequest) {
       const { id: idw, ...waliData } = wali;
       const { data, error } = await supabase
         .from("biodata_wali")
-        .upsert([{ siswa_id: siswaId, ...waliData }], { onConflict: "siswa_id" })
+        .upsert([{ id_siswa: siswaId, ...waliData }], { onConflict: "id_siswa" })
         .select()
         .single();
       if (error) throw error;
@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
     const { id: ids, ...tempatData } = tempat;
     const { data: tempatUpsert, error: tempatErr } = await supabase
       .from("tempat_tinggal")
-      .upsert([{ siswa_id: siswaId, ...tempatData }], { onConflict: "siswa_id" })
+      .upsert([{ id_siswa: siswaId, ...tempatData }], { onConflict: "id_siswa" })
       .select()
       .single();
     if (tempatErr) throw tempatErr;

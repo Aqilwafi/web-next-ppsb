@@ -13,7 +13,7 @@ export async function supabaseServer() {
         get(name: string) {
           return cookieStore.get(name)?.value;
         },
-        set() {}, // opsional (read-only di server)
+        set() {}, 
         remove() {},
       },
     }

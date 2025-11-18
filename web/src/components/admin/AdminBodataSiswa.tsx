@@ -33,7 +33,7 @@ export default function BiodataCard() {
   const [search, setSearch] = useState("");
 
   if (loading) return <p>Memuat data...</p>;
-  if (error) return <p>Error: {error.message}</p>;
+  if (error) return <p>Error: {error}</p>;
 
    // Filter + search
   const filtered = students.filter((u) => {
@@ -41,7 +41,7 @@ export default function BiodataCard() {
       filterLembaga === "All" || u.lembaga === filterLembaga;
     const matchesSearch =
       u.nama_lengkap.toLowerCase().includes(search.toLowerCase()) ||
-      u.lembaga.toLowerCase().includes(search.toLowerCase());
+      u.lembaga?.toLowerCase().includes(search.toLowerCase());
     return matchesLembaga && matchesSearch;
   });
 
@@ -162,25 +162,25 @@ export default function BiodataCard() {
                 <div className="mt-6">
                   <h3 className="text-lg font-semibold mb-2">Orang Tua</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700 text-sm">
-                    <p><strong>Nama Ayah:</strong> {selectedStudent.orang_tua.nama_ayah}</p>
-                    <p><strong>Nama Ibu:</strong> {selectedStudent.orang_tua.nama_ibu}</p>
-                    <p><strong>NIK Ayah:</strong> {selectedStudent.orang_tua.nik_ayah}</p>
-                    <p><strong>NIK Ibu:</strong> {selectedStudent.orang_tua.nik_ibu}</p>
-                    <p><strong>Tempat Lahir Ayah:</strong> {selectedStudent.orang_tua.tempat_lahir_ayah}</p>
-                    <p><strong>Tempat Lahir Ibu:</strong> {selectedStudent.orang_tua.tempat_lahir_ibu}</p>
-                    <p><strong>Tanggal Lahir Ayah:</strong> {selectedStudent.orang_tua.tanggal_lahir_ayah}</p>
-                    <p><strong>Tanggal Lahir Ibu:</strong> {selectedStudent.orang_tua.tanggal_lahir_ibu}</p>
-                    <p><strong>Pekerjaan Ayah:</strong> {selectedStudent.orang_tua.pekerjaan_ayah}</p>
-                    <p><strong>Pekerjaan Ibu:</strong> {selectedStudent.orang_tua.pekerjaan_ibu}</p>
-                    <p><strong>Status Ayah:</strong> {selectedStudent.orang_tua.status_ayah}</p>
-                    <p><strong>Status Ibu:</strong> {selectedStudent.orang_tua.status_ibu}</p>
-                    <p><strong>No Telp Ayah:</strong> {selectedStudent.orang_tua.no_telp_ayah}</p>
-                    <p><strong>No Telp Ibu:</strong> {selectedStudent.orang_tua.no_telp_ibu}</p>
-                    <p><strong>Pendidikan Ayah:</strong> {selectedStudent.orang_tua.pendidikan_ayah}</p>
-                    <p><strong>Pendidikan Ibu:</strong> {selectedStudent.orang_tua.pendidikan_ibu}</p>
-                    <p><strong>Penghasilan Ayah:</strong> {selectedStudent.orang_tua.penghasilan_ayah}</p>
-                    <p><strong>Penghasilan Ibu:</strong> {selectedStudent.orang_tua.penghasilan_ibu}</p>
-                    <p><strong>Alamat Orang Tua:</strong> {selectedStudent.orang_tua.alamat_ortu}</p>
+                    <p><strong>Nama Ayah:</strong> {selectedStudent.orang_tua?.nama_ayah}</p>
+                    <p><strong>Nama Ibu:</strong> {selectedStudent.orang_tua?.nama_ibu}</p>
+                    <p><strong>NIK Ayah:</strong> {selectedStudent.orang_tua?.nik_ayah}</p>
+                    <p><strong>NIK Ibu:</strong> {selectedStudent.orang_tua?.nik_ibu}</p>
+                    <p><strong>Tempat Lahir Ayah:</strong> {selectedStudent.orang_tua?.tempat_lahir_ayah}</p>
+                    <p><strong>Tempat Lahir Ibu:</strong> {selectedStudent.orang_tua?.tempat_lahir_ibu}</p>
+                    <p><strong>Tanggal Lahir Ayah:</strong> {selectedStudent.orang_tua?.tanggal_lahir_ayah}</p>
+                    <p><strong>Tanggal Lahir Ibu:</strong> {selectedStudent.orang_tua?.tanggal_lahir_ibu}</p>
+                    <p><strong>Pekerjaan Ayah:</strong> {selectedStudent.orang_tua?.pekerjaan_ayah}</p>
+                    <p><strong>Pekerjaan Ibu:</strong> {selectedStudent.orang_tua?.pekerjaan_ibu}</p>
+                    <p><strong>Status Ayah:</strong> {selectedStudent.orang_tua?.status_ayah}</p>
+                    <p><strong>Status Ibu:</strong> {selectedStudent.orang_tua?.status_ibu}</p>
+                    <p><strong>No Telp Ayah:</strong> {selectedStudent.orang_tua?.no_telp_ayah}</p>
+                    <p><strong>No Telp Ibu:</strong> {selectedStudent.orang_tua?.no_telp_ibu}</p>
+                    <p><strong>Pendidikan Ayah:</strong> {selectedStudent.orang_tua?.pendidikan_ayah}</p>
+                    <p><strong>Pendidikan Ibu:</strong> {selectedStudent.orang_tua?.pendidikan_ibu}</p>
+                    <p><strong>Penghasilan Ayah:</strong> {selectedStudent.orang_tua?.penghasilan_ayah}</p>
+                    <p><strong>Penghasilan Ibu:</strong> {selectedStudent.orang_tua?.penghasilan_ibu}</p>
+                    <p><strong>Alamat Orang Tua:</strong> {selectedStudent.orang_tua?.alamat_ortu}</p>
                   </div>
                 </div>
 
@@ -188,9 +188,9 @@ export default function BiodataCard() {
                 <div className="mt-6">
                   <h3 className="text-lg font-semibold mb-2">Wali</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700 text-sm">
-                    <p><strong>Nama Wali:</strong> {selectedStudent.wali.nama_wali}</p>
-                    <p><strong>Pekerjaan Wali:</strong> {selectedStudent.wali.pekerjaan_wali}</p>
-                    <p><strong>No Telp Wali:</strong> {selectedStudent.wali.no_telp_wali}</p>
+                    <p><strong>Nama Wali:</strong> {selectedStudent.wali?.nama_wali}</p>
+                    <p><strong>Pekerjaan Wali:</strong> {selectedStudent.wali?.pekerjaan_wali}</p>
+                    <p><strong>No Telp Wali:</strong> {selectedStudent.wali?.no_telp_wali}</p>
                   </div>
                 </div>
 
@@ -198,9 +198,9 @@ export default function BiodataCard() {
                 <div className="mt-6">
                   <h3 className="text-lg font-semibold mb-2">Tempat Tinggal</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-gray-700 text-sm">
-                    <p><strong>Status Rumah:</strong> {selectedStudent.tempat_tinggal.status_rumah}</p>
-                    <p><strong>Tinggal Bersama:</strong> {selectedStudent.tempat_tinggal.tinggal_bersama}</p>
-                    <p><strong>Alamat:</strong> {selectedStudent.tempat_tinggal.alamat}</p>
+                    <p><strong>Status Rumah:</strong> {selectedStudent.tempat_tinggal?.status_rumah}</p>
+                    <p><strong>Tinggal Bersama:</strong> {selectedStudent.tempat_tinggal?.tinggal_bersama}</p>
+                    <p><strong>Alamat:</strong> {selectedStudent.tempat_tinggal?.alamat}</p>
                   </div>
                 </div>
               </div>

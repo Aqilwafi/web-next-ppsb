@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { uploadMultiDokumen, uploadBukti } from "@/services/serviceDokumen";
-import { fetchBioProfile } from "@/services/serviceBiodata"; // fungsi fetch siswa_id
 
 export function useDokumen(user: string) {
   const [rawKK, setRawKK] = useState<File | null>(null);

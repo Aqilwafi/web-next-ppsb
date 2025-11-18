@@ -55,7 +55,7 @@ export function useAuth() {
       }
 
       // Simpan user ke state (bisa juga ke localStorage kalau mau persist)
-      setUser(response.user);
+      setUser(user);
 
       // Redirect ke dashboard
       router.push("/dashboard");

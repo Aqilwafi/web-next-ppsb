@@ -70,7 +70,7 @@ export async function POST(req: NextRequest) {
       const { data: newBiodata, error: biodataError } = await supabase
         .from("biodata_siswa")
         .insert({
-          profile_id: newUser.id,
+          id: newUser.id,
           nama_lengkap,
           jenis_kelamin,
         })
