@@ -1,10 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
 import Sidebar from "@/admins/components/Sidebar";
 import Header from "@/admins/components/Header";
-import { Users, Wallet, DollarSign, ArrowLeft, ClipboardList, FileX,FileClock, FileCheck, FileSignature, Clock, XCircle, CheckCircle, CreditCard } from "lucide-react";
-import MaintenancePage from "@/admins/components/maintanance";
 import { useSidebar } from "@/admins/hooks/useSidebar";
 import { useAdminAuth } from "@/admins/hooks/useAdminAuth";
 import BiodataCard from "@/admins/components/AdminBodataSiswa";

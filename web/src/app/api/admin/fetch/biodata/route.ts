@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { supabaseAdmin } from "@/lib/supabaseAdmin";
-import { Biodata, BiodataOrtu, BiodataWali, TempatTinggal } from "@/types/admin/biodataType";
+import { Biodata, BiodataOrtu, BiodataWali, TempatTinggal } from "@/admins/types/biodataType";
 
 export async function GET() {
   try {
