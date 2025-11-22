@@ -287,7 +287,6 @@ export default function AdminDocumentTable() {
         id: s.id,
         statusDokumen: docStatus, // jika banyak siswa, nanti pakai state global per siswa
       }));
-      console.log("Submit payload:", payload);
       alert("Dokumen disubmit! Cek console log untuk payload.");
     }}
   >

@@ -13,11 +13,9 @@ export function useAdminAuth() {
 
   // 🔁 Jalankan setiap kali router berubah
   useEffect(() => {
-    const fetchAdmin = async () => {
-      
+    const fetchAdmin = async () => {  
       const currentAdmin = await getCurrentAdmin();
-      setAdmin(currentAdmin);
-      
+      setAdmin(currentAdmin);   
     };
 
     fetchAdmin();

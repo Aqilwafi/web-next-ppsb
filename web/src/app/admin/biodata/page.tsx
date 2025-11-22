@@ -12,18 +12,20 @@ export default function BiodataPage() {
   const { admin } = useAdminAuth();
 
   return (
-    <div className="flex min-h-screen transition-colour">
+    <div className="flex h-screen transition-colour">
       <Sidebar
-             isOpen={sidebarOpen}
-             toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-             active="/admin/biodata"
-           />
+        isOpen={sidebarOpen}
+        toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+        active="/admin/biodata"
+      />
 
-      <main className="flex flex-col w-full bg-gray-100">
+      {/* MAIN SECTION FIXED HEIGHT */}
+      <main className="flex flex-col w-full bg-gray-100 h-full overflow-hidden">
         <Header />
 
-        <div className="flex-1 p-6 w-full">
-          <BiodataCard/>
+        {/* WRAPPER KONTEN */}
+        <div className="flex-1 p-6 w-full overflow-y-auto">
+          <BiodataCard />
         </div>
       </main>
     </div>

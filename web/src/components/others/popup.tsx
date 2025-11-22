@@ -10,8 +10,6 @@ export default function FormWithConfirm() {
 
   const confirmSubmit = () => {
     setShowConfirm(false);
-    // lanjut submit data ke server
-    console.log("Data dikirim!");
   };
 
   return (

@@ -56,7 +56,6 @@ export async function GET() {
       `);
 
     if (error) throw error;
-    //console.log("DEBUG - Raw siswa data:", JSON.stringify(siswa, null, 2));
 
     // Mapping agar lebih mudah dipakai di UI
     const students: Biodata[] = siswa.map((s: any) => {
@@ -92,7 +91,7 @@ export async function GET() {
         tempat_tinggal: tempat,
       };
     });
-    //console.log("DEBUG - Mapped students:", JSON.stringify(students, null, 2));
+
     return NextResponse.json({ students }, { status: 200 });
   } catch (err: any) {
     console.error("ERROR /api/admin/fetch/biodata:", err);

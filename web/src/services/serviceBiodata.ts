@@ -20,7 +20,6 @@ export async function inputBiodata(
       tempat: formDataF,
     }),
   });
-  console.log(formDataD, formDataE);
 
   const data = await res.json();
   if (!data.success) throw new Error(data.message);

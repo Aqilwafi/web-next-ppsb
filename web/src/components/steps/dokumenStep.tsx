@@ -11,9 +11,7 @@ export default function DokumenStep({ user, isComplete, onComplete }: DashboardS
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("rawKK:", rawKK);
-    console.log("rawKTP:", rawKTP);
-    console.log("rawFoto:", rawFoto);
+
     if (!rawKK || !rawKTP || !rawFoto) {
       alert("Lengkapi semua file sebelum submit");
       return;
